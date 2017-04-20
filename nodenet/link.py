@@ -1,8 +1,7 @@
 import uuid
 
 class Link:
-
-	def __init__ (self, origin_node, gate, target_node, slot, weight):
+	def __init__(self, origin_node, gate, target_node, slot, weight):
 		self.uuid = uuid.uuid()
 		self.origin_node = origin_node
 		self.gate = gate
