@@ -12,7 +12,8 @@ class Nodenet:
 
 	def node_factory(self, name = None, slot_vector = "gen", gate_vector = "gen", node_function = None):
 		node = Node(name, slot_vector, gate_vector, node_function)
-		self.node_dict.add(node.name, node)
+		self.node_dict[node.name] = node
+		return node
 
-	def remove_node(name):
+	def remove_node(self, name):
 		self.node_dict.pop(name, None) 
