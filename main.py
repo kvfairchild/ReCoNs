@@ -5,13 +5,17 @@ from nodenet import nodenet
 nodenet = nodenet.Nodenet("nodenet")
 
 N1 = nodenet.node_factory("n1")
-N2 = nodenet.node_factory()
+# N2 = nodenet.node_factory()
 
-for node in nodenet.node_dict:
-	print nodenet.node_dict[node].name
-	print nodenet.node_dict[node].slot_vector
 
-nodenet.remove_node("n1")
+print N1.slot_vector
+print N1.gate_vector
 
-for node in nodenet.node_dict:
-	print nodenet.node_dict[node].name
+# for node in nodenet.node_dict:
+# 	print nodenet.node_dict[node].name
+# 	print nodenet.node_dict[node].slot_vector
+
+# nodenet.remove_node("n1")
+
+# for node in nodenet.node_dict:
+# 	print nodenet.node_dict[node].name

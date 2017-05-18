@@ -11,7 +11,7 @@ class Nodenet:
 		self.slot_dict = {}
 		self.gate_dict = {}
 
-	def node_factory(self, name = None, slot_vector = "gen", gate_vector = "gen", node_function = None):
+	def node_factory(self, name = None, slot_vector = None, gate_vector = None, node_function = None):
 		node = Node(name, slot_vector, gate_vector, node_function)
 		self.node_dict[node.name] = node
 		return node

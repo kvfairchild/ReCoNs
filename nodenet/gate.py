@@ -1,3 +1,5 @@
+from math import tanh
+
 class Gate:
 	def __init__(self, name, activation, parameters = {}, gate_function = None):
 		self.name = name
