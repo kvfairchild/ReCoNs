@@ -4,9 +4,11 @@ from .node import Node
 from .link import Link
 
 class Nodenet:
-	def __init__(self, name = None):
+	def __init__(self, name = None, num_layers = None, num_nodes = None):
 		self.uid = uuid.uuid4()
 		self.name = name
+		self.num_layers = num_layers
+		self.num_nodes = num_nodes
 		self.node_dict = {}
 		self.slot_dict = {}
 		self.gate_dict = {}
@@ -18,3 +20,9 @@ class Nodenet:
 
 	def remove_node(self, name):
 		self.node_dict.pop(name, None) 
+
+	def link_nodes(self, num_layers, num_nodes):
+		num_layers = num_layers
+		num_nodes = num_nodes
+		print num_layers
+		print num_nodes

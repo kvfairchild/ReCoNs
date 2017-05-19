@@ -11,6 +11,9 @@ N1 = nodenet.node_factory("n1")
 print N1.slot_vector
 print N1.gate_vector
 
+num_layers = nodenet(input("Number of layers: "))
+num_nodes = nodenet(input("Number of nodes per layer: "))
+
 # for node in nodenet.node_dict:
 # 	print nodenet.node_dict[node].name
 # 	print nodenet.node_dict[node].slot_vector
