@@ -31,7 +31,7 @@ class Nodenet:
 	    node_net = []
 	    for n in range(0, self.num_layers):
 	    	node_net.append(self.build_layer())
-	    self.create_links(node_net)
+	    self.link_nodenet(node_net)
 	    return node_net
 
 	def build_layer(self):
@@ -40,29 +40,37 @@ class Nodenet:
 	        layer.append(self.node_factory(name = None, slot_vector = None, gate_vector = None, node_function = None))
 	    return layer
 
-	def create_links(self, node_net):
-		links = []
-		# get origin node and gate
-		print "origin nodes"
+	def link_nodenet(self, node_net):
+		origin_nodes = []
 		for n in range(0, self.num_layers-1):
-			for n in node_net[n]:
-				origin_node = n.name
-				print origin_node
-				for n in n.gate_vector:
-					origin_gate = n.name
-		# get target node and slot
-		print "target nodes"
-		for n in range(1, self.num_layers):
-			for n in node_net[n]:
-				target_node = n.name
-				print target_node
-				for n in n.slot_vector:
-					target_slot = n.name
-		#establish link between origin and target node
-		print "*****"
-		for n in range(0, self.num_layers):
-			for n in node_net[n]:
-				links.append(self.link_factory(origin_node, origin_gate, target_node, target_slot))
-		for n in links:
-			print n.origin_node, " ", target_node
-		return links
+		 	for n in node_net[n]:
+		 		origin_node = n.name
+		 		target_nodes = []
+		 		for n in next(node_net[n]):
+		 			target_nodes.append(n.name)
+		 		origin_nodes.append(n.name, target_nodes)
+
+
+		# 		origin_node = n.name
+		# 		for n in n.gate_vector:
+		# 			origin_gate = n.name
+		# 		origins.append([origin_node, origin_gate])
+		# # get target nodes and slots
+		# for n in range(1, self.num_layers):
+		# 	for n in node_net[n]:
+		# 		target_node = n.name
+		# 		for n in n.slot_vector:
+		# 			target_slot = n.name
+		# 		targets.append([target_node, target_slot])
+	# 	# # create links from all origin gates to all target slots				
+	# 	self.create_links(origins, targets)
+
+	# def create_links(self, origins, targets):
+	# 	links = []
+	# 	for n in origins:
+	# 		origin_node = n[0]
+	# 		origin_gate = n[1]
+	# 	for n in targets
+	# 		target_node = n[0]
+	# 		target_slot = n[1]
+			#links.append(self.link_factory(origin_node, origin_gate, target_node, target_slot))
