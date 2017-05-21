@@ -13,6 +13,7 @@ class Node:
 		self.node_function = node_function if node_function != None else self.__default_node_function
 		self.current_value = None
 
+	# calls all gate functions, passes value from slot
 	def __default_node_function(self):
 		for gate in self.gate_vector:
 			gate.gate_function(self.current_value)

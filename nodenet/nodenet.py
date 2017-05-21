@@ -17,6 +17,7 @@ class Nodenet:
 		self.slot_dict = {}
 		self.gate_dict = {}
 
+	# multiplies active node gate values with link weights, sums them in target slots
 	def link_function(self):
 		for link in self.link_list:
 			if link.origin_gate.is_active():
@@ -25,18 +26,18 @@ class Nodenet:
 
 	def build_nodenet(self):
 	    for layer in range(0, self.num_layers):
-	    	layer = self.build_layer()
+	    	layer = self.__build_layer()
 	    	self.node_net.append(layer)
-	    self.link_nodenet()
+	    self.__link_nodenet()
 
-	def build_layer(self):
+	def __build_layer(self):
 	    layer = []
 	    for node in range(0, self.num_nodes):
-	    	node = self.node_factory()
+	    	node = self.__node_factory()
 	        layer.append(node)
 	    return layer
 
-	def node_factory(self, name = None, slot_name_list = None, gate_name_list = None, node_function = None):
+	def __node_factory(self, name = None, slot_name_list = None, gate_name_list = None, node_function = None):
 		node = Node(name, slot_name_list, gate_name_list, node_function)
 		self.node_dict[node.name] = node
 		for slot in node.slot_vector:
@@ -45,20 +46,20 @@ class Nodenet:
 			self.gate_dict[gate.uid] = gate
 		return node
 
-	def link_nodenet(self):
+	def __link_nodenet(self):
 		# iterate through n-1 layers for origin nodes
 		for layer_index in range(0, self.num_layers-1):
 			for node_index in range(0, len(self.node_net[layer_index])):
-				self.create_link(self.node_net[layer_index][node_index], self.node_net[layer_index+1])
+				self.__create_link(self.node_net[layer_index][node_index], self.node_net[layer_index+1])
 
-	def create_link(self, origin_node, target_layer):
+	def __create_link(self, origin_node, target_layer):
 		for target_node in target_layer:
 			for target_slot in target_node.slot_vector:
-				self.link_list.append(self.link_factory(origin_node, origin_node.gate_vector[0], target_node, target_slot))
+				self.link_list.append(self.__link_factory(origin_node, origin_node.gate_vector[0], target_node, target_slot))
 
-	def remove_node(self, name):
+	def __remove_node(self, name):
 		self.node_dict.pop(name, None) 
 
-	def link_factory(self, origin_node, origin_gate, target_node, target_slot):
+	def __link_factory(self, origin_node, origin_gate, target_node, target_slot):
 		link = Link(origin_node, origin_gate, target_node, target_slot)
 		return link
