@@ -26,3 +26,13 @@ class Node:
         #calls all gate functions, passes value from slot
         for gate in self.gate_vector:
             gate.gate_function(self.current_value)
+
+    def get_gate(self, name):
+        for gate in self.gate_vector:
+            if name == gate.name:
+                return gate
+
+    def get_slot(self, name):
+        for slot in self.slot_vector:
+            if name == slot.name:
+                return slot

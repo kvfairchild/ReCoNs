@@ -1,26 +1,27 @@
-# from .link import Link
-# from .node_factory import node_factory
+from .link import Link
+from .node_factory import node_factory
+from .nodenet import Nodenet
 
+def add_nodes(nodes_list):
+	Nodenet.Instance().add_nodes(node_factory(nodes_list))
 
-# # multiplies active node gate values with link weights, sums them in target slots
-# def link_function(self):
-# 	for link in self.link_list:
-# 		if link.origin_gate.is_active():
-# 			current_value = link.origin_gate.current_value * link.weight
-# 			link.target_slot.current_value = link.target_slot.current_value + current_value
+def link_nodes(links_list):
+	for link in links_list:
+		create_link(link)
+
+def create_link(link_data):
+	origin_node = Nodenet.Instance().node_dict[link_data.get("origin")[0]]
+	origin_gate = origin_node.get_gate(link_data.get("origin")[1])
+	target_node = Nodenet.Instance().node_dict[link_data.get("target")[0]]
+	target_slot = target_node.get_gate(link_data.get("target")[1])
+	
+	return Link(origin_node, origin_gate, target_node, target_slot)
 
 # def build_nodenet(self):
 #     for layer in range(0, self.num_layers):
 #     	layer = __build_layer()
 #     	self.node_net.append(layer)
 #     __link_nodenet(node_net)
-
-# def __build_layer(self):
-#     layer = []
-#     for node in range(0, self.num_nodes):
-#     	node = self.__node_factory()
-#         layer.append(node)
-#     return layer
 
 # def __link_nodenet(self):
 # 	# iterate through n-1 layers for origin nodes
