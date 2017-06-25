@@ -3,17 +3,24 @@ from .gate_factory import gate_factory
 from .slot_factory import slot_factory
 
 NODE_TYPES = {
+    "register": [
+        "register",
+        slot_factory([ "gen" ]),
+        gate_factory([ "gen" ])
+    ],
     "sensor": [
         "sensor",
-        gate_factory([ "por", "gen"]),
-        slot_factory(["por"])
+        slot_factory([ "gen" ])
     ],
+    "actuator": [
+        "actuator",
+        slot_factory([ "gen" ])
+    ],    
     "concept": [
-        "concept"
-    ],
-    "register": [
-        "register"
-    ],
+        "concept",
+        slot_factory([ "gen" ]),
+        gate_factory([ "gen", "por", "ret", "sub", "sur", "cat", "exp", "sym", "ref" ])
+    ]
 }
 
 def node_factory(node_names):
@@ -22,4 +29,4 @@ def node_factory(node_names):
         return [Node(*NODE_TYPES.get(name)) for name in node_names]
     # return default
     else:
-        return Node(*NODE_TYPES.get("sensor"))
+        return Node(*NODE_TYPES.get("register"))
