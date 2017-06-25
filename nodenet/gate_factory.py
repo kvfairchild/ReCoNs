@@ -15,6 +15,36 @@ GATE_TYPES = {
         "ret",
         0,
         {"threshold": 0.3}
+    ],
+    "sub": [
+        "sub",
+        0,
+        {"threshold": 0.4}
+    ],
+    "sur": [
+        "sur",
+        0,
+        {"threshold": 0.5}
+    ],
+    "cat": [
+        "cat",
+        0,
+        {"threshold": 0.6}
+    ],
+    "exp": [
+        "exp",
+        0,
+        {"threshold": 0.7}
+    ],
+    "sym": [
+        "sym",
+        0,
+        {"threshold": 0.8}
+    ],
+    "ref": [
+        "ref",
+        0,
+        {"threshold": 0.9}
     ]
 }
 
