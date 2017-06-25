@@ -1,21 +1,23 @@
-from .gate import Gate
+from gate import Gate
 
-def gen():
-	return Gate("gen", .1)
-def por():
-	return Gate("por", .2)
-def ret():
-	return Gate("ret", .3)
-
-gate_transformer = {
-	"gen": gen,
-	"por": por,
-	"ret": ret
+GATE_TYPES = {
+    "gen": [
+        "gen",
+        0,
+        {"threshold": 0.1}
+    ],
+    "por": [
+        "por",
+        0,
+        {"threshold": 0.2}
+    ],
+    "ret": [
+        "ret",
+        0,
+        {"threshold": 0.3}
+    ]
 }
 
-
-def gate_factory(gates):
-	gate_vector = []
-	for gate in gates:
-		gate_vector.append(gate_transformer.get(gate)())
-	return gate_vector
+def gate_factory(gate_names):
+    # return a list of gates, generated from gate types based on a list of names
+    return [Gate(*GATE_TYPES.get(name)) for name in gate_names]
