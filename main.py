@@ -5,7 +5,7 @@ from nodenet import control
 
 if __name__ == "__main__":
 	config.add_nodes([
-		["root_node", "register"], 
+		["root_node", "concept"], 
 		["register1", "register"], 
 		["register2", "register"], 
 		["register3", "register"], 
@@ -15,7 +15,7 @@ if __name__ == "__main__":
 		["register7", "register"],	
 		["register8", "register"],	
 		["register9", "register"],	
-		["tail_node", "register"]
+		["tail_node", "concept"]
 	])
 	config.link_nodes([
 		{

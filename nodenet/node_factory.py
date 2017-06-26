@@ -4,25 +4,35 @@ from .slot_factory import slot_factory
 
 NODE_TYPES = {
     "register": [
-        slot_factory([ "gen" ]),
-        gate_factory([ "gen" ])
+        [ "gen" ],
+        [ "gen" ]
     ],
     "sensor": [
-        slot_factory([ "gen" ])
+        [ "gen" ]
     ],
     "actuator": [
-        slot_factory([ "gen" ])
+        [ "gen" ]
     ],    
     "concept": [
-        slot_factory([ "gen" ]),
-        gate_factory([ "gen", "por", "ret", "sub", "sur", "cat", "exp", "sym", "ref" ])
+        [ "gen" ],
+        [ "gen", "por", "ret", "sub", "sur", "cat", "exp", "sym", "ref" ]
     ]
 }
 
 def node_factory(nodes_list):
-    # return a list of gates, generated from gate types based on a list of names
+    # return a list of nodes, generated from node types based on a list of names
     if len(nodes_list) > 0:
-        return [Node(node[0], *NODE_TYPES.get(node[1])) for node in nodes_list]
-    # return default
+        nodes = []
+        for node in nodes_list:
+            node_data = get_slots_and_gates(*NODE_TYPES.get(node[1]))
+            nodes.append(Node(node[0], *node_data))
+        return nodes
+    # return default node
     else:
         return Node(*NODE_TYPES.get("register"))
+
+def get_slots_and_gates(slot_names, gate_names):
+    return [
+        slot_factory(slot_names),
+        gate_factory(gate_names)
+    ]
