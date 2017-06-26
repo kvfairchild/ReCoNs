@@ -7,5 +7,8 @@ class Gate:
         self.parameters = parameters if parameters else {}
         self.gate_function = gate_function if gate_function else self._default_gate_function
 
-    def _default_gate_function(self, input_value):
-        self.activation = tanh(input_value)
+    def _default_gate_function(self, activation):
+        self.activation = tanh(activation)
+
+    def is_active(self):
+    	return self.activation > self.parameters.get("threshold")

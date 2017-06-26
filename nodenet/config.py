@@ -14,7 +14,6 @@ def remove_nodes(nodes_list):
 def link_nodes(links_list):
 	for link in links_list:
 		Nodenet.Instance().add_link(create_link(link))
-	print Nodenet.Instance().links_list
 
 def create_link(link_data):
 	origin_node = Nodenet.Instance().node_dict[link_data.get("origin")[0]]
@@ -23,3 +22,12 @@ def create_link(link_data):
 	target_slot = target_node.get_gate(link_data.get("target")[1])
 	
 	return Link(origin_node, origin_gate, target_node, target_slot)
+
+def initialize_root_node(activation, node_name, slot_name):
+	root_node = Nodenet.Instance().node_dict[node_name]
+	root_slot = root_node.get_slot(slot_name)
+
+	root_slot.activation = activation
+
+def set_tail_node(node_name, gate_name):
+	Nodenet.Instance().tail_list = [node_name, gate_name]
