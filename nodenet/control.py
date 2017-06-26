@@ -4,3 +4,4 @@ def link_function(self):
 		if link.origin_gate.is_active():
 			current_value = link.origin_gate.current_value * link.weight
 			link.target_slot.current_value = link.target_slot.current_value + current_value
+

@@ -22,11 +22,6 @@ class Node:
     def name(self, value):
         self.name = value
 
-    def _default_node_function(self):
-        #calls all gate functions, passes value from slot
-        for gate in self.gate_vector:
-            gate.gate_function(self.current_value)
-
     def get_gate(self, name):
         for gate in self.gate_vector:
             if name == gate.name:
@@ -36,3 +31,8 @@ class Node:
         for slot in self.slot_vector:
             if name == slot.name:
                 return slot
+                
+    def _default_node_function(self):
+    #calls all gate functions, passes value from slot
+        for gate in self.gate_vector:
+            gate.gate_function(self.current_value)
