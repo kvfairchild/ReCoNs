@@ -10,7 +10,6 @@ class Node:
         self.uid = uuid4()
         self.name = name
         self.node_function = node_function if node_function is not None else self._default_node_function
-        self.current_value = None
         self.slot_vector = slot_vector
         self.gate_vector = gate_vector
 
@@ -32,7 +31,7 @@ class Node:
             if name == slot.name:
                 return slot
                 
-    def _default_node_function(self):
+    def _default_node_function(self, activation):
     #calls all gate functions, passes value from slot
         for gate in self.gate_vector:
-            gate.gate_function(self.current_value)
+            gate.gate_function(activation)

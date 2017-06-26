@@ -9,6 +9,7 @@ class Nodenet:
 		self.name = name
 		self.node_dict = {}
 		self.links_list = []
+		self.tail_list = None
 
 	@property
 	def name(self):
