@@ -15,6 +15,7 @@ def _step_function():
 def _link_function():
 	for link in Nodenet.Instance().links_list:
 		if link.origin_gate.is_active():
+			print "origin gate: ", link.origin_gate
 			activation = link.origin_gate.activation * link.weight
 			link.target_slot.activation = link.target_slot.activation + activation
 			print link.target_slot.activation
