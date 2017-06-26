@@ -15,14 +15,14 @@ def _step_function():
 def _link_function():
 	for link in Nodenet.Instance().links_list:
 		if link.origin_gate.is_active():
-			print "origin gate: ", link.origin_gate
+			print link.origin_gate, ": ", link.origin_gate.activation
 			activation = link.origin_gate.activation * link.weight
 			link.target_slot.activation = link.target_slot.activation + activation
-			print link.target_slot.activation
+			print link.target_slot, ": ", link.target_slot.activation
 			
 			if link.target_node.name == Nodenet.Instance().tail_list[0]\
 			and link.target_slot.name == Nodenet.Instance().tail_list[1]:
-				return link.target_slot.activation
+				return link.origin_gate.activation
 
 def _net_function():
 	node_dict = Nodenet.Instance().node_dict
