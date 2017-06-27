@@ -6,6 +6,8 @@ def run():
 def _step_function():
 	output = None
 	while output is None:
+		print
+
 		_net_function()
 		output = _link_function()
 		zero_gates()
