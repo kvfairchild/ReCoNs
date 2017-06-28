@@ -15,7 +15,7 @@ if __name__ == "__main__":
 		["register7", "register"],	
 		["register8", "register"],	
 		["register9", "register"],	
-		["tail_node", "concept"]
+		["exit_node", "concept"]
 	])
 	config.link_nodes([
 		{
@@ -88,18 +88,18 @@ if __name__ == "__main__":
 		},
 		{
 			"origin": ["register7", "gen"],
-			"target": ["tail_node", "gen"]
+			"target": ["exit_node", "gen"]
 		},
 		{
 			"origin": ["register8", "gen"],
-			"target": ["tail_node", "gen"]
+			"target": ["exit_node", "gen"]
 		},
 		{
 			"origin": ["register9", "gen"],
-			"target": ["tail_node", "gen"]
+			"target": ["exit_node", "gen"]
 		}
 	])
 
 	config.initialize_root_node(2, "root_node", "gen")
-	config.set_tail_node("tail_node", "gen")
+	config.set_exit_node("exit_node", "gen")
 	control.run()

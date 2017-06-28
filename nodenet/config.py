@@ -29,5 +29,5 @@ def initialize_root_node(activation, node_name, slot_name):
 
 	root_slot.activation = activation
 
-def set_tail_node(node_name, gate_name):
-	Nodenet.Instance().tail_list = [node_name, gate_name]
+def set_exit_node(node_name, gate_name):
+	Nodenet.Instance().exit_node_list = [node_name, gate_name]
