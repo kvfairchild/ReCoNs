@@ -10,7 +10,7 @@ def _step_function():
 
 		_net_function()
 		output = _link_function()
-		zero_gates()
+		_zero_gates()
 
 	return output
 
@@ -25,9 +25,9 @@ def _link_function():
 			# if calculation reaches tail node, exit
 			if link.target_node.name == Nodenet.Instance().tail_list[0]\
 			and link.target_slot.name == Nodenet.Instance().tail_list[1]:
-				return link.origin_gate.activation
+				return link.target_slot.activation
 
-def zero_gates():
+def _zero_gates():
 	for link in Nodenet.Instance().links_list:
 		if link.origin_gate.activation > 0:
 			link.origin_gate.activation = 0

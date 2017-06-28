@@ -100,6 +100,6 @@ if __name__ == "__main__":
 		}
 	])
 
-	config.initialize_root_node(.2, "root_node", "gen")
+	config.initialize_root_node(2, "root_node", "gen")
 	config.set_tail_node("tail_node", "gen")
 	control.run()
