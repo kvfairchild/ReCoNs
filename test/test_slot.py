@@ -1,4 +1,5 @@
 import unittest
+
 from nodenet.slot import Slot
 
 class TestSlot(unittest.TestCase):

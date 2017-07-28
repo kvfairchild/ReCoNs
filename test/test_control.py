@@ -1,10 +1,12 @@
 import unittest
+from mock import MagicMock
 
 from nodenet import config
 from nodenet import control
+from nodenet.node import Node
 from nodenet.nodenet import Nodenet
 
-from sample_input import *
+from input_config import *
 
 class TestControl(unittest.TestCase):
 
@@ -13,8 +15,6 @@ class TestControl(unittest.TestCase):
 		config.link_nodes(link_data)
 		config.initialize_root_node(*root_node_data)
 		config.set_exit_node(*exit_node_data)
-
-		control.run()
 
 if __name__ == '__main__':
 	unittest.main()

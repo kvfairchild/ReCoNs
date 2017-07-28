@@ -3,7 +3,7 @@
 from nodenet import config
 from nodenet import control
 
-from test.sample_input import *
+from test.input_config import *
 
 if __name__ == "__main__":
 

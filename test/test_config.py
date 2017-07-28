@@ -5,7 +5,7 @@ from nodenet.link import Link
 from nodenet.node import Node
 from nodenet.nodenet import Nodenet
 
-from sample_input import *
+from input_config import *
 
 class TestConfig(unittest.TestCase):
 

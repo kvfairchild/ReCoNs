@@ -27,7 +27,10 @@ def initialize_root_node(activation, node_name, slot_name):
 	root_node = Nodenet.Instance().node_dict[node_name]
 	root_slot = root_node.get_slot(slot_name)
 
-	root_slot.activation = activation
+	if activation > .1:
+		root_slot.activation = activation
+	else:
+		raise ValueError
 
 def set_exit_node(node_name, gate_name):
 	Nodenet.Instance().exit_node_list = [node_name, gate_name]
