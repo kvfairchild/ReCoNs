@@ -94,3 +94,9 @@ link_data = [
 		"target": ["exit_node", "gen"]
 	}
 ]
+
+# activation value, root node name, slot name
+root_node_data = [3, "root_node", "gen"]
+
+# exit node name, gate name
+exit_node_data = ["exit_node", "gen"]
