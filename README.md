@@ -1,9 +1,9 @@
-#NODENET
+# NODENET
 
-##RUNNING
+## Running
 > ./main.py
 
-##TESTS
+## Tests
 
 ### to run test
 > python -m unittest discover -v
