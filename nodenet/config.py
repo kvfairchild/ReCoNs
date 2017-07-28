@@ -8,8 +8,8 @@ def add_nodes(nodes_list):
 def remove_nodes(nodes_list):
 	node_dict = Nodenet.Instance().node_dict
 
-	for node in nodes_list:
-		node_dict.pop(node)
+	for name in nodes_list:
+		node_dict.pop(name)
 
 def link_nodes(links_list):
 	for link in links_list:

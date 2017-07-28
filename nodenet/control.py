@@ -18,8 +18,7 @@ def _step_function():
 def _net_function():
 	node_dict = Nodenet.Instance().node_dict
 
-	for key in node_dict:
-		node = node_dict.get(key)
+	for node in node_dict.values():
 		for slot in node.slot_vector:
 			if slot.activation > 0:
 				node.node_function(slot.activation)
