@@ -16,5 +16,3 @@ def build_nodenet(nodenet):
 
 if __name__ == "__main__":
 	build_nodenet(Nodenet())
-
-	
