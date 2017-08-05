@@ -1,8 +1,5 @@
 from uuid import uuid4
 
-from .singleton import Singleton
-
-@Singleton
 class Nodenet:
 	def __init__(self, name = None):
 		self.uid = uuid4()

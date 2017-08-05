@@ -2,29 +2,29 @@ from .link import Link
 from .node_factory import node_factory
 from .nodenet import Nodenet
 
-def add_nodes(nodes_list):
-	Nodenet.Instance().add_nodes(node_factory(nodes_list))
+def add_nodes(nodenet, nodes_list):
+	nodenet.add_nodes(node_factory(nodes_list))
 
-def remove_nodes(nodes_list):
-	node_dict = Nodenet.Instance().node_dict
+def remove_nodes(nodenet, nodes_list):
+	node_dict = nodenet.node_dict
 
 	for name in nodes_list:
 		node_dict.pop(name)
 
-def link_nodes(links_list):
+def link_nodes(nodenet, links_list):
 	for link in links_list:
-		Nodenet.Instance().add_link(create_link(link))
+		nodenet.add_link(create_link(nodenet, link))
 
-def create_link(link_data):
-	origin_node = Nodenet.Instance().node_dict[link_data.get("origin")[0]]
+def create_link(nodenet, link_data):
+	origin_node = nodenet.node_dict[link_data.get("origin")[0]]
 	origin_gate = origin_node.get_gate(link_data.get("origin")[1])
-	target_node = Nodenet.Instance().node_dict[link_data.get("target")[0]]
+	target_node = nodenet.node_dict[link_data.get("target")[0]]
 	target_slot = target_node.get_slot(link_data.get("target")[1])
 	
 	return Link(origin_node, origin_gate, target_node, target_slot)
 
-def initialize_root_node(activation, node_name, slot_name):
-	root_node = Nodenet.Instance().node_dict[node_name]
+def initialize_root_node(nodenet, activation, node_name, slot_name):
+	root_node = nodenet.node_dict[node_name]
 	root_slot = root_node.get_slot(slot_name)
 
 	if activation > .1:
@@ -32,5 +32,5 @@ def initialize_root_node(activation, node_name, slot_name):
 	else:
 		raise ValueError
 
-def set_exit_node(node_name, gate_name):
-	Nodenet.Instance().exit_node_list = [node_name, gate_name]
+def set_exit_node(nodenet, node_name, gate_name):
+	nodenet.exit_node_list = [node_name, gate_name]
