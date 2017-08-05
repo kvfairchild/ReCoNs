@@ -43,7 +43,7 @@ def _zero_gates(nodenet):
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight
 	link.target_slot.activation = link.target_slot.activation + activation
-	print "target node:", link.target_node.name, ":", link.target_slot.activation
+	# print "target node:", link.target_node.name, ":", link.target_slot.activation
 
 def _is_exit_node(nodenet, link):
 	return link.target_node.name == nodenet.exit_node_list[0]\
