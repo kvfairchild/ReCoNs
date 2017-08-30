@@ -4,47 +4,47 @@ GATE_TYPES = {
     "gen": [
         "gen",
         0,
-        {"threshold": 0.1}
+        {"threshold": 0}
     ],
     "por": [
         "por",
         0,
-        {"threshold": 0.2}
+        {"threshold": 0.1}
     ],
     "ret": [
         "ret",
         0,
-        {"threshold": 0.3}
+        {"threshold": 0.2}
     ],
     "sub": [
         "sub",
         0,
-        {"threshold": 0.4}
+        {"threshold": 0.3}
     ],
     "sur": [
         "sur",
         0,
-        {"threshold": 0.5}
+        {"threshold": 0.4}
     ],
     "cat": [
         "cat",
         0,
-        {"threshold": 0.6}
+        {"threshold": 0.5}
     ],
     "exp": [
         "exp",
         0,
-        {"threshold": 0.7}
+        {"threshold": 0.6}
     ],
     "sym": [
         "sym",
         0,
-        {"threshold": 0.8}
+        {"threshold": 0.7}
     ],
     "ref": [
         "ref",
         0,
-        {"threshold": 0.9}
+        {"threshold": 0.8}
     ]
 }
 

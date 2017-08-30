@@ -27,10 +27,14 @@ def initialize_root_node(nodenet, activation, node_name, slot_name):
 	root_node = nodenet.node_dict[node_name]
 	root_slot = root_node.get_slot(slot_name)
 
-	if activation > .1:
+	if activation >= 0:
 		root_slot.activation = activation
 	else:
 		raise ValueError
 
 def set_exit_node(nodenet, node_name, gate_name):
 	nodenet.exit_node_list = [node_name, gate_name]
+
+def generate_node_data(num_nodes):
+	return [["register"+str(n+1), "register"] for n in range(0, num_nodes)] + [["root_node", "register"]] + [["exit_node", "register"]]
+

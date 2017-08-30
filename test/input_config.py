@@ -1,16 +1,16 @@
-node_data = [
-	["root_node", "concept"], 
-	["register1", "register"], 
-	["register2", "register"], 
-	["register3", "register"], 
-	["register4", "register"], 
-	["register5", "register"], 
-	["register6", "register"], 
-	["register7", "register"],	
-	["register8", "register"],	
-	["register9", "register"],	
-	["exit_node", "concept"]
-]
+# node_data = [
+# 	["root_node", "concept"],
+# 	["register1", "register"],
+# 	["register2", "register"],
+# 	["register3", "register"],
+# 	["register4", "register"],
+# 	["register5", "register"],
+# 	["register6", "register"],
+# 	["register7", "register"],
+# 	["register8", "register"],
+# 	["register9", "register"],
+# 	["exit_node", "concept"]
+# ]
 
 link_data = [
 	{
