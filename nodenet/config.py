@@ -12,7 +12,7 @@ def generate_node_data(network_dimensions):
 	return node_data
 
 def add_nodes(nodenet, node_data):
-	nodenet.add_nodes(node_factory(node_data))
+	nodenet.add_layers(node_factory(node_data))
 
 def remove_nodes(nodenet, node_data):
 	node_dict = nodenet.node_dict
@@ -42,16 +42,26 @@ def create_link(nodenet, link_data):
 
 	return Link(origin_node, origin_gate, target_node, target_slot)
 
-# INITIALIZE NETWORK
+# PREPARE DATA AND SET ACTIVATION
 
-def initialize_root_node(nodenet, activation, node_name, slot_name):
-	root_node = nodenet.node_dict[node_name]
-	root_slot = root_node.get_slot(slot_name)
+def _flatten_image(image):
+	flattened = []
+	for row in image:
+		for pixel in row:
+			flattened.append(pixel)
+	return flattened
+			
+def set_activation(nodenet, image):
+	flattened_image = _flatten_image(image)
+	for i, node in enumerate(nodenet.layers[0]):
 
-	if activation >= 0:
-		root_slot.activation = activation
-	else:
-		raise ValueError
+		for pixel in flattened_image[i]:
+			slot = node.get_slot("gen")
 
-def set_exit_node(nodenet, node_name, gate_name):
-	nodenet.exit_node_list = [node_name, gate_name]
+		if pixel >= 0:
+		 	slot.activation = pixel
+		else:
+		 	raise ValueError
+
+# def set_exit_node(nodenet, node_name, gate_name):
+# 	nodenet.exit_node_list = [node_name, gate_name]

@@ -5,6 +5,7 @@ class Nodenet:
 		self.uid = uuid4()
 		self.name = name
 		self.node_dict = {}
+		self.layers = []
 		self.links_list = []
 		self.exit_node_list = None
 
@@ -20,10 +21,15 @@ class Nodenet:
 	def node_dict(self, name):
 		return self.node_dict[name]
 
-	def add_nodes(self, node_data):
-		for layer in node_data:
-			for node in layer:
-			 	self.node_dict[node.name] = node
+	def add_layers(self, layers):
+		self.layers = layers
+		[self.add_nodes(layer) for layer in layers]
+
+	def add_nodes(self, layer):
+		[self.add_node(node) for node in layer]
+
+	def add_node(self, node):
+		self.node_dict[node.name] = node
 
 	def add_link(self, link):
 		self.links_list.append(link)

@@ -6,13 +6,11 @@ def run(nodenet):
 def _step_function(nodenet):
 	output = None
 
-	while output is None:
+	for layer in nodenet.layers:
 		_net_function(nodenet)
 		output = _link_function(nodenet)
 		_zero_gates(nodenet)
 
-		print
-	return output
 
 # call node function for nodes that received activation
 def _net_function(nodenet):
@@ -29,10 +27,6 @@ def _link_function(nodenet):
 	for link in nodenet.links_list:
 		if link.origin_gate.is_active():
 			_send_activation_to_target_slot(link)
-			
-			# if calculation reaches exit node, return output
-			if _is_exit_node(nodenet, link):
-				return link.target_slot.activation
 
 # HELPER FUNCTIONS
 def _zero_gates(nodenet):
