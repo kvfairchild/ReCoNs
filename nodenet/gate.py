@@ -1,4 +1,5 @@
 from math import tanh
+import numpy as np
 
 class Gate:
     def __init__(self, name, activation, parameters=None, gate_function=None):

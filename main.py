@@ -16,24 +16,15 @@ def build_nodenet(nodenet):
 
 	link_data = config.generate_link_data(node_data)
 	config.link_nodes(nodenet, link_data)
-	# config.set_exit_node(nodenet, *exit_node_data)
-	
+		
 def parse_data():
 	return MNIST_file_parser.read()
 
 def train(nodenet, data):
 	# for image in data["images"]:
 	config.set_activation(nodenet, data["images"][0])
-	control.run(nodenet)
-
-def fetch_output(nodenet):
-	output = []
-	output_layer = nodenet.layers[len(nodenet.layers) - 1]
-	for node in output_layer:
-		output.append(node.get_gate("gen").activation)
-
+	output = control.run(nodenet)
 	print output
-
 
 
 if __name__ == "__main__":
@@ -42,5 +33,3 @@ if __name__ == "__main__":
 
 	data = parse_data()
 	train(nodenet, data)
-	print
-	fetch_output(nodenet)
