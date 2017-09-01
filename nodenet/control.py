@@ -54,6 +54,6 @@ def _is_exit_node(nodenet, link):
 	and link.target_slot.name == nodenet.exit_node_list[1]
 
 def _softmax(normal_output):
-	e_normal_output = np.exp(normal_output - np.max(normal_output))
-	return e_normal_output / e_normal_output.sum()
+	exp_normal_output = np.exp(normal_output - np.max(normal_output))
+	return exp_normal_output / exp_normal_output.sum()
 
