@@ -19,10 +19,14 @@ NODE_TYPES = {
     ]
 }
 
-def node_factory(nodes_list):
+def node_factory(node_data):
     # return a list of nodes, generated from node types based on a list of names
-    if len(nodes_list) > 0:
-        return [Node(node[0], *get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in nodes_list]
+    if len(node_data) > 0:
+        layers = []
+        for layer in node_data:
+            node = [Node(node[0], *get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+            layers.append(node)
+        return layers
     else:
         raise ValueError("please pass in node data or number of nodes to create")
 

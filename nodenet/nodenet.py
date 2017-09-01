@@ -20,9 +20,10 @@ class Nodenet:
 	def node_dict(self, name):
 		return self.node_dict[name]
 
-	def add_nodes(self, nodes):
-		for node in nodes:
-			self.node_dict[node.name] = node
+	def add_nodes(self, node_data):
+		for layer in node_data:
+			for node in layer:
+			 	self.node_dict[node.name] = node
 
 	def add_link(self, link):
 		self.links_list.append(link)
