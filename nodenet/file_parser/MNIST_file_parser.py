@@ -50,4 +50,11 @@ def _extract_labels(label_file):
     num_items = _read32(f)
     buf = f.read(num_items)
     labels = np.frombuffer(buf, dtype=np.uint8)
-    return labels
+    return _one_hot(labels)
+
+def _one_hot(labels):
+    num_labels = labels.shape[0]
+    index_offset = np.arange(num_labels) * 10
+    labels_one_hot = np.zeros((num_labels, 10))
+    labels_one_hot.flat[index_offset + labels.ravel()] = 1
+    return labels_one_hot

@@ -53,15 +53,47 @@ def _flatten_image(image):
 			
 def set_activation(nodenet, image):
 	flattened_image = _flatten_image(image)
+
 	for i, node in enumerate(nodenet.layers[0]):
 
 		for pixel in flattened_image[i]:
 			slot = node.get_slot("gen")
+			slot.activation = pixel
 
-		if pixel >= 0:
-		 	slot.activation = pixel
-		else:
-		 	raise ValueError
+# UPDATE LINK WEIGHTS
 
-# def set_exit_node(nodenet, node_name, gate_name):
-# 	nodenet.exit_node_list = [node_name, gate_name]
+def update_weights(nodenet, error_array, image):
+	LEARNING_RATE = 0.05
+	flattened_image = _flatten_image(image)
+	output_links = get_output_links(nodenet)
+
+	# set weights for each link to output nodes based on pixel value
+	for node_index, node_links in enumerate(output_links):
+			
+		i = 0
+		while i < len(flattened_image):
+			for link in node_links:
+				pixel = flattened_image[i][0]
+	   			link.weight += LEARNING_RATE * pixel * error_array[node_index]
+	   			i += 1
+
+# LINK WEIGHT HELPER FUNCTIONS
+
+def get_output_links(nodenet):
+	output_links = []
+
+	for node in nodenet.layers[len(nodenet.layers)-1]:
+		for slot in node.slot_vector:
+			output_links.append(get_link_by_target_slot(nodenet, slot))
+
+	return output_links
+
+def get_link_by_target_slot(nodenet, slot):
+
+	node_input_links = []
+
+	for link in nodenet.links_list:
+		if slot == link.target_slot:
+			node_input_links.append(link)
+	
+	return node_input_links
