@@ -62,33 +62,50 @@ def set_activation(nodenet, image):
 
 # UPDATE LINK WEIGHTS
 
-def update_weights(nodenet, error_array, image):
-	LEARNING_RATE = 0.05
-	flattened_image = _flatten_image(image)
-	output_links = get_output_links(nodenet)
+def update_weights(nodenet, error_array, image, i):
 
+	flattened_image = _flatten_image(image)
+	output_links = _get_output_links(nodenet)
+	INITIAL_LEARNING_RATE = .05
+	RATE_DECAY = .0001
+	global learning_rate
+
+	# set learning weight
+	if i == 0:
+		learning_rate = INITIAL_LEARNING_RATE
+	else:
+		learning_rate = _decay_learning_rate(learning_rate, RATE_DECAY)
+		
 	# set weights for each link to output nodes based on pixel value
 	for node_index, node_links in enumerate(output_links):
 			
 		i = 0
+
 		while i < len(flattened_image):
+
 			for link in node_links:
 				pixel = flattened_image[i][0]
-	   			link.weight += LEARNING_RATE * pixel * error_array[node_index]
+	   			link.weight += learning_rate * pixel * error_array[node_index]
 	   			i += 1
 
 # LINK WEIGHT HELPER FUNCTIONS
 
-def get_output_links(nodenet):
+def _decay_learning_rate(learning_rate, RATE_DECAY):
+
+	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
+	
+	return learning_rate
+
+def _get_output_links(nodenet):
 	output_links = []
 
 	for node in nodenet.layers[len(nodenet.layers)-1]:
 		for slot in node.slot_vector:
-			output_links.append(get_link_by_target_slot(nodenet, slot))
+			output_links.append(_get_link_by_target_slot(nodenet, slot))
 
 	return output_links
 
-def get_link_by_target_slot(nodenet, slot):
+def _get_link_by_target_slot(nodenet, slot):
 
 	node_input_links = []
 

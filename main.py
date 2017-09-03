@@ -31,10 +31,7 @@ def train(nodenet, data):
 	images = data["images"]
 	labels = data["labels"]
 
-	# for i, image in enumerate(images):
-	i = 0
-	while i < 50:
-
+	for i, image in enumerate(images):
 		config.set_activation(nodenet, images[i])
 
 		target_output = labels[i] # one hot encoded label
@@ -50,8 +47,9 @@ def train(nodenet, data):
 		else:
 			print i, "prediction: ", predicted_int, " target: ", target_int
 			error_count += 1
+			print "# errors: ", error_count
 
-		config.update_weights(nodenet, error_array, images[i])
+		config.update_weights(nodenet, error_array, images[i], i)
 
 	success_rate = (error_count / len(images)) * 100
 	print "success rate: ", success_rate
