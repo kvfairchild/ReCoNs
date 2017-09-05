@@ -1,6 +1,6 @@
-from .nodenet import Nodenet
-
 import numpy as np
+
+from .nodenet import Nodenet
 
 def run(nodenet):
 	return _step_function(nodenet)

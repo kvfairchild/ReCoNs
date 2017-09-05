@@ -70,7 +70,7 @@ def update_weights(nodenet, error_array, image, i):
 	RATE_DECAY = .0001
 	global learning_rate
 
-	# set learning weight
+	# set and decay learning rate 
 	if i == 0:
 		learning_rate = INITIAL_LEARNING_RATE
 	else:
@@ -80,10 +80,10 @@ def update_weights(nodenet, error_array, image, i):
 	for node_index, node_links in enumerate(output_links):
 			
 		i = 0
-
 		while i < len(flattened_image):
 
 			for link in node_links:
+
 				pixel = flattened_image[i][0]
 	   			link.weight += learning_rate * pixel * error_array[node_index]
 	   			i += 1
@@ -91,7 +91,6 @@ def update_weights(nodenet, error_array, image, i):
 # LINK WEIGHT HELPER FUNCTIONS
 
 def _decay_learning_rate(learning_rate, RATE_DECAY):
-
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
 	return learning_rate
