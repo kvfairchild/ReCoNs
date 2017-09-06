@@ -23,7 +23,7 @@ def build_nodenet(nodenet):
 def parse_data(data_type):
 	return MNIST_file_parser.read(data_type)
 
-def run_nodenet(nodenet, data):
+def run_nodenet(nodenet, data, run_type):
 	start_time = time.time()
 
 	images = data["images"]
@@ -34,7 +34,8 @@ def run_nodenet(nodenet, data):
 
 		activation = config.set_activation(nodenet, images[i])
 		error_array = control.run(nodenet, labels[i], i)
-		config.update_weights(nodenet, activation, error_array, i)
+		if run_type == "train":
+			config.update_weights(nodenet, activation, error_array, i)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))
 
@@ -45,8 +46,8 @@ if __name__ == "__main__":
 
 	# TRAIN
 	data = parse_data("training")
-	run_nodenet(nodenet, data)
+	run_nodenet(nodenet, data, "train")
 
 	# TEST
 	data = parse_data("testing")
-	run_nodenet(nodenet, data)
+	run_nodenet(nodenet, data, "test")
