@@ -30,6 +30,3 @@ class Nodenet:
 
 	def add_node(self, node):
 		self.node_dict[node.name] = node
-
-	def add_link(self, link):
-		self.links_list.append(link)

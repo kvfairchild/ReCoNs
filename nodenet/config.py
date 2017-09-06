@@ -22,19 +22,48 @@ def remove_nodes(nodenet, node_data):
 
 # LINKS
 
-def generate_link_data(node_data):
+def generate_link_data(nodenet):
 	link_data = []
-	for target_node in node_data[1]:
-	 	for origin_node in node_data[0]:
-	 		link = {"origin": [origin_node[0], "gen"], "target": [target_node[0], "gen"]}
-	 		link_data.append(link)
+	
+	for layer_index, layer in enumerate(nodenet.layers):
+
+		# don't need links for the last layer of nodes
+		if 0 < layer_index < len(nodenet.layers):
+			layer_links = []
+
+		 	for target_node in layer:
+		 		node_links = []
+
+		 		for origin_node in nodenet.layers[layer_index-1]:
+
+			 		node_links.append({
+			 			"origin": [origin_node.name, "gen"],
+			 			"target": [target_node.name, "gen"]
+			 		})
+
+				layer_links.append(node_links)
+		
+			link_data.append(layer_links)
+
 	return link_data
 
 def link_nodes(nodenet, link_data):
-	for link in link_data:
-		nodenet.add_link(create_link(nodenet, link))
+
+	for layer in link_data:
+		layer_links = []
+
+		for node in layer:
+			node_links = []
+
+			for link in node:
+				node_links.append(create_link(nodenet, link))
+
+			layer_links.append(node_links)
+
+		nodenet.links_list.append(layer_links)
 
 def create_link(nodenet, link_data):
+
 	origin_node = nodenet.node_dict[link_data.get("origin")[0]]
 	origin_gate = origin_node.get_gate(link_data.get("origin")[1])
 	target_node = nodenet.node_dict[link_data.get("target")[0]]
@@ -53,19 +82,25 @@ def _flatten_image(image):
 			
 def set_activation(nodenet, image):
 	flattened_image = _flatten_image(image)
+	activation = []
 
 	for i, node in enumerate(nodenet.layers[0]):
 
 		for pixel in flattened_image[i]:
+
+			pixel = 1 if pixel > 0 else pixel # cheat code for binary values 
 			slot = node.get_slot("gen")
 			slot.activation = pixel
 
+			activation.append(slot.activation)
+
+	return activation
+
 # UPDATE LINK WEIGHTS
 
-def update_weights(nodenet, error_array, image, i):
+def update_weights(nodenet, activation, error_array, i):
 
-	flattened_image = _flatten_image(image)
-	output_links = _get_output_links(nodenet)
+	output_links = nodenet.links_list[len(nodenet.layers)-2]
 	INITIAL_LEARNING_RATE = .05
 	RATE_DECAY = .0001
 	global learning_rate
@@ -77,39 +112,18 @@ def update_weights(nodenet, error_array, image, i):
 		learning_rate = _decay_learning_rate(learning_rate, RATE_DECAY)
 		
 	# set weights for each link to output nodes based on pixel value
-	for node_index, node_links in enumerate(output_links):
-			
+	for node_index, output_node in enumerate(output_links):
+
 		i = 0
-		while i < len(flattened_image):
+		while i < (28*28):
 
-			for link in node_links:
+			for link in output_node:
 
-				pixel = flattened_image[i][0]
-	   			link.weight += learning_rate * pixel * error_array[node_index]
-	   			i += 1
-
-# LINK WEIGHT HELPER FUNCTIONS
+			 	pixel = activation[i]
+			 	link.weight += learning_rate * pixel * error_array[node_index]
+			 	i += 1
 
 def _decay_learning_rate(learning_rate, RATE_DECAY):
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
 	return learning_rate
-
-def _get_output_links(nodenet):
-	output_links = []
-
-	for node in nodenet.layers[len(nodenet.layers)-1]:
-		for slot in node.slot_vector:
-			output_links.append(_get_link_by_target_slot(nodenet, slot))
-
-	return output_links
-
-def _get_link_by_target_slot(nodenet, slot):
-
-	node_input_links = []
-
-	for link in nodenet.links_list:
-		if slot == link.target_slot:
-			node_input_links.append(link)
-	
-	return node_input_links
