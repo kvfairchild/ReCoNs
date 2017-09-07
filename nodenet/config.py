@@ -1,3 +1,5 @@
+from __future__ import division
+
 from .link import Link
 from .node_factory import node_factory
 from .nodenet import Nodenet
@@ -88,7 +90,7 @@ def set_activation(nodenet, image):
 
 		for pixel in flattened_image[i]:
 
-			pixel = 1 if pixel > 0 else pixel # cheat code for binary values 
+			pixel = pixel * (1/255) 
 			slot = node.get_slot("gen")
 			slot.activation = pixel
 
