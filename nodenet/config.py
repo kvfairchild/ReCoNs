@@ -1,4 +1,5 @@
 from __future__ import division
+import numpy as np
 
 from .link import Link
 from .node_factory import node_factory
@@ -56,12 +57,12 @@ def set_activation(nodenet, image):
 
 			activation.append(slot.activation)
 
-	return activation
+	return np.array(activation)
 
 # UPDATE LINK WEIGHTS
 
 def update_weights(nodenet, activation, error_array, image_index):
-	output_links = nodenet.links_list[len(nodenet.layers)-2]
+	links_list = nodenet.links_list
 	INITIAL_LEARNING_RATE = .05
 	RATE_DECAY = .0001
 	global learning_rate
@@ -70,11 +71,18 @@ def update_weights(nodenet, activation, error_array, image_index):
 	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
 		
 	# set weights for each link to output nodes based on pixel value
-	for node_index, output_node in enumerate(output_links):
+	for layer_index, layer in enumerate(links_list):
+		if layer_index < len(links_list):
 
-		for i in range(len(activation)):
-			link = output_node[i]
-			link.weight += learning_rate * activation[i] * error_array[node_index]
+			for node_index, node in enumerate(layer):
+
+				for i in range(len(node)):
+					link = node[i]
+
+		else:
+
+			for node_index, node
+					link.weight += learning_rate * activation[i] * error_array[node_index]
 
 def _decay_learning_rate(learning_rate, RATE_DECAY):
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))

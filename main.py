@@ -12,7 +12,7 @@ from nodenet.file_parser import MNIST_file_parser
 
 def build_nodenet(nodenet):
 	# enter nodes per layer
-	network_dimensions = [784, 10]
+	network_dimensions = [784, 256, 10]
 
 	node_data = config.generate_node_data(network_dimensions)
 	config.add_nodes(nodenet, node_data)
