@@ -50,7 +50,7 @@ def set_activation(nodenet, image):
 
 		for pixel in flattened_image[i]:
 
-			pixel = pixel * (1/255) 
+			pixel = pixel * (1/255) # normalize values between [0,1]
 			slot = node.get_slot("gen")
 			slot.activation = pixel
 
@@ -60,26 +60,21 @@ def set_activation(nodenet, image):
 
 # UPDATE LINK WEIGHTS
 
-def update_weights(nodenet, activation, error_array, i):
+def update_weights(nodenet, activation, error_array, image_index):
 	output_links = nodenet.links_list[len(nodenet.layers)-2]
 	INITIAL_LEARNING_RATE = .05
 	RATE_DECAY = .0001
 	global learning_rate
 
 	# set and decay learning rate 
-	learning_rate = INITIAL_LEARNING_RATE if i == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
+	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
 		
 	# set weights for each link to output nodes based on pixel value
 	for node_index, output_node in enumerate(output_links):
 
-		i = 0
-		while i < (28*28):
-
-			for link in output_node:
-
-			 	pixel = activation[i]
-			 	link.weight += learning_rate * pixel * error_array[node_index]
-			 	i += 1
+		for i in range(len(activation)):
+			link = output_node[i]
+			link.weight += learning_rate * activation[i] * error_array[node_index]
 
 def _decay_learning_rate(learning_rate, RATE_DECAY):
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
