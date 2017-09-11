@@ -58,33 +58,3 @@ def set_activation(nodenet, image):
 			activation.append(slot.activation)
 
 	return np.array(activation)
-
-# UPDATE LINK WEIGHTS
-
-def update_weights(nodenet, activation, error_array, image_index):
-	links_list = nodenet.links_list
-	INITIAL_LEARNING_RATE = .05
-	RATE_DECAY = .0001
-	global learning_rate
-
-	# set and decay learning rate 
-	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
-		
-	# set weights for each link to output nodes based on pixel value
-	for layer_index, layer in enumerate(links_list):
-		if layer_index < len(links_list):
-
-			for node_index, node in enumerate(layer):
-
-				for i in range(len(node)):
-					link = node[i]
-
-		else:
-
-			for node_index, node
-					link.weight += learning_rate * activation[i] * error_array[node_index]
-
-def _decay_learning_rate(learning_rate, RATE_DECAY):
-	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
-	
-	return learning_rate

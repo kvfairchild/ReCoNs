@@ -3,25 +3,28 @@ import numpy as np
 
 from .nodenet import Nodenet
 
-def run(nodenet, target_output, i):
+def run(nodenet, target_output, image_index, run_type):
 		output = _step_function(nodenet) # one hot output
 		predicted_int = _one_hot_to_int(output) # integer output
 		target_int = _one_hot_to_int(target_output) # integer label
-		error_array = target_output - output
+		error_array = np.array(target_output - output)
 
 		global error_count
-		error_count = 0 if i == 0 else error_count
+		error_count = 0 if image_index == 0 else error_count
 
 		if predicted_int == target_int:
-			print "#", i+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
+			print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
 		else:
-			print "#", i+1, "prediction: ", predicted_int, " target: ", target_int
+			print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
 			error_count += 1
 		
-		success_rate = "{:.2f}".format((((i+1) - error_count) / (i+1)) * 100)
+		success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
 		print "success rate: ", success_rate, "%"
 
-		return np.array(error_array)
+		if run_type == "train":
+			_update_weights(nodenet, error_array, image_index)
+
+		_zero_gates(nodenet)
  
 def _step_function(nodenet):
     network_output = []
@@ -29,7 +32,6 @@ def _step_function(nodenet):
     for i, layer in enumerate(nodenet.layers):
         _net_function(nodenet)
         _link_function(nodenet)
-        _zero_gates(nodenet)
 
         # fetch output from last layer
         if i == len(nodenet.layers)-1:
@@ -57,6 +59,29 @@ def _link_function(nodenet):
 			for link in node:
 				if link.origin_gate.is_active():
 					_send_activation_to_target_slot(link)
+
+# UPDATE LINK WEIGHTS
+
+def _update_weights(nodenet, error_array, image_index):
+	output_links = nodenet.links_list[len(nodenet.layers)-2]
+	INITIAL_LEARNING_RATE = .05
+	RATE_DECAY = .0001
+	global learning_rate
+
+	# set and decay learning rate 
+	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
+		
+	# set weights for each link to output nodes
+	for node_index, output_node in enumerate(output_links):
+
+		for i in range(len(nodenet.layers[len(nodenet.layers)-2])):
+			link = output_node[i]
+			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
+
+def _decay_learning_rate(learning_rate, RATE_DECAY):
+	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
+	
+	return learning_rate
 
 # HELPER FUNCTIONS
 
