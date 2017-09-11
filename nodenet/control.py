@@ -21,7 +21,7 @@ def run(nodenet, target_output, i):
 		success_rate = "{:.2f}".format((((i+1) - error_count) / (i+1)) * 100)
 		print "success rate: ", success_rate, "%"
 
-		return error_array
+		return np.array(error_array)
  
 def _step_function(nodenet):
     network_output = []

@@ -1,4 +1,5 @@
 from __future__ import division
+import numpy as np
 
 from .link import Link
 from .node_factory import node_factory
@@ -56,7 +57,7 @@ def set_activation(nodenet, image):
 
 			activation.append(slot.activation)
 
-	return activation
+	return np.array(activation)
 
 # UPDATE LINK WEIGHTS
 
