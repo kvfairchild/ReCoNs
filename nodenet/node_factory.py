@@ -23,8 +23,8 @@ def node_factory(node_data):
     # return a list of nodes, generated from node types based on a list of names
     if len(node_data) > 0:
         layers = []
-        for layer in node_data:
-            if layer < len(node_data):
+        for layer_index, layer in enumerate(node_data):
+            if layer_index < len(node_data)-1:
                 node = [Node(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
                 layers.append(node)
             else:

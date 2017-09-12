@@ -7,7 +7,7 @@ def run(nodenet, target_output, image_index, run_type):
 		output = _step_function(nodenet) # one hot output
 		predicted_int = _one_hot_to_int(output) # integer output
 		target_int = _one_hot_to_int(target_output) # integer label
-		error_array = np.array(target_output - output)
+		error_array = target_output - output
 
 		global error_count
 		error_count = 0 if image_index == 0 else error_count
@@ -27,7 +27,6 @@ def run(nodenet, target_output, image_index, run_type):
 		_zero_gates(nodenet)
  
 def _step_function(nodenet):
-    network_output = []
 
     for i, layer in enumerate(nodenet.layers):
         _net_function(nodenet)
@@ -35,12 +34,9 @@ def _step_function(nodenet):
 
         # fetch output from last layer
         if i == len(nodenet.layers)-1:
-            for node in nodenet.layers[i]:
-                for gate in node.gate_vector:
-                	output = gate.activation
-                	network_output.append(output)
+        	output = [gate.activation for node in layer for gate in node.gate_vector]
 
-    return _softmax(network_output) # apply softmax function
+    return _softmax(output) # apply softmax
 
 # call node function for nodes that received activation
 def _net_function(nodenet):

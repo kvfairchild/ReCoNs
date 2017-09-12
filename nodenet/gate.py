@@ -11,11 +11,11 @@ class Gate:
 			"output": self._output_gate_function
 		}[gate_function]
 
-    def is_active(self):
-    	return self.activation > self.parameters.get("threshold")
-
     def _default_gate_function(self, activation):
     	self.activation = tanh(activation)
 
     def _output_gate_function(self, activation):
     	self.activation = activation
+
+    def is_active(self):
+        return self.activation > self.parameters.get("threshold")
