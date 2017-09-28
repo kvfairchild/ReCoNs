@@ -32,10 +32,8 @@ def run_nodenet(nodenet, data, run_type):
 	# feed images into network
 	for i, image in enumerate(images):
 
-		activation = config.set_activation(nodenet, images[i])
-		error_array = control.run(nodenet, labels[i], i)
-		if run_type == "train":
-			config.update_weights(nodenet, activation, error_array, i)
+		config.set_activation(nodenet, images[i])
+		control.run(nodenet, labels[i], i, run_type)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))
 
