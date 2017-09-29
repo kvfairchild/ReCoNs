@@ -60,12 +60,7 @@ def _link_function(nodenet):
 
 def _update_weights(nodenet, error_array, image_index):
 	output_links = nodenet.links_list[len(nodenet.layers)-2]
-	INITIAL_LEARNING_RATE = .05
-	RATE_DECAY = .0001
-	global learning_rate
-
-	# set and decay learning rate 
-	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
+	learning_rate = _decay_learning_rate(nodenet)
 		
 	# set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
@@ -74,10 +69,13 @@ def _update_weights(nodenet, error_array, image_index):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
 
-def _decay_learning_rate(learning_rate, RATE_DECAY):
-	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
+def _decay_learning_rate(nodenet):
+	learning_rate = nodenet.learning_rate
+	RATE_DECAY = nodenet.RATE_DECAY
+
+	nodenet.learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
-	return learning_rate
+	return nodenet.learning_rate
 
 # HELPER FUNCTIONS
 
