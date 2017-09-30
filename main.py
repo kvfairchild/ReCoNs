@@ -32,8 +32,9 @@ def run_nodenet(nodenet, data, run_type):
 	# feed images into network
 	for i, image in enumerate(images):
 
-		config.set_activation(nodenet, images[i])
-		control.run(nodenet, labels[i], i, run_type)
+		if i < 500:
+			config.set_activation(nodenet, images[i])
+			control.run(nodenet, labels[i], i, run_type)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))
 
@@ -47,5 +48,5 @@ if __name__ == "__main__":
 	run_nodenet(nodenet, data, "train")
 
 	# TEST
-	data = parse_data("testing")
-	run_nodenet(nodenet, data, "test")
+	# data = parse_data("testing")
+	# run_nodenet(nodenet, data, "test")

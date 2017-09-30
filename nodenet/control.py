@@ -5,21 +5,9 @@ from .nodenet import Nodenet
 
 def run(nodenet, target_output, image_index, run_type):
 	output = _step_function(nodenet) # one hot output
-	predicted_int = _one_hot_to_int(output) # integer output
-	target_int = _one_hot_to_int(target_output) # integer label
 	error_array = target_output - output
 
-	global error_count
-	error_count = 0 if image_index == 0 else error_count
-
-	if predicted_int == target_int:
-		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
-	else:
-		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
-		error_count += 1
-	
-	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
-	print "success rate: ", success_rate, "%"
+	_pretty_print(output, target_output, image_index)
 
 	if run_type == "train":
 		_update_weights(nodenet, error_array, image_index)
@@ -79,6 +67,27 @@ def _decay_learning_rate(nodenet):
 
 # HELPER FUNCTIONS
 
+def _pretty_print(output, target_output, image_index):
+	predicted_int = _one_hot_to_int(output) # integer output
+	target_int = _one_hot_to_int(target_output) # integer label
+
+	if predicted_int == target_int:
+		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
+	else:
+		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
+		_increment_error_count(image_index)
+	
+	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
+	print "success rate: ", success_rate, "%"
+
+def _increment_error_count(image_index):
+	global error_count
+
+	error_count = 0 if image_index == 0 else error_count
+	error_count += 1
+
+	return error_count
+
 def _zero_gates(nodenet):
 	for layer in nodenet.links_list:
 		for node in layer:
@@ -89,10 +98,6 @@ def _zero_gates(nodenet):
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight
 	link.target_slot.activation = link.target_slot.activation + activation
-
-def _is_exit_node(nodenet, link):
-	return link.target_node.name == nodenet.exit_node_list[0]\
-	and link.target_slot.name == nodenet.exit_node_list[1]
 
 def _softmax(output):
 	exp_output = np.exp(output - np.max(output))
