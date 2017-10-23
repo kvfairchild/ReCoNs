@@ -57,6 +57,7 @@ def _update_weights(nodenet, error_array, image_index):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
 
+
 def _decay_learning_rate(nodenet):
 	learning_rate = nodenet.learning_rate
 	RATE_DECAY = nodenet.RATE_DECAY
@@ -71,22 +72,17 @@ def _pretty_print(output, target_output, image_index):
 	predicted_int = _one_hot_to_int(output) # integer output
 	target_int = _one_hot_to_int(target_output) # integer label
 
+	global error_count
+	error_count = 0 if image_index == 0 else error_count
+
 	if predicted_int == target_int:
 		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
 	else:
 		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
-		_increment_error_count(image_index)
+		error_count += 1
 	
 	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
 	print "success rate: ", success_rate, "%"
-
-def _increment_error_count(image_index):
-	global error_count
-
-	error_count = 0 if image_index == 0 else error_count
-	error_count += 1
-
-	return error_count
 
 def _zero_gates(nodenet):
 	for layer in nodenet.links_list:
