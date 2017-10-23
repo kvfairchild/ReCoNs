@@ -47,13 +47,13 @@ def _link_function(nodenet):
 # UPDATE LINK WEIGHTS
 
 def _update_weights(nodenet, error_array, image_index):
-	output_links = nodenet.links_list[len(nodenet.layers)-2]
+	output_links = nodenet.links_list[len(nodenet.links_list)-1]
 	learning_rate = _decay_learning_rate(nodenet)
 		
 	# set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
 
-		for i in range(len(nodenet.layers[len(nodenet.layers)-2])):
+		for i in range(len(output_node)):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
 
