@@ -1,5 +1,9 @@
 from __future__ import division
+from math import sqrt
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import numpy as np
+import os
 
 from .nodenet import Nodenet
 
@@ -11,6 +15,12 @@ def run(nodenet, target_output, image_index, run_type):
 
 	if run_type == "train":
 		_update_weights(nodenet, error_array, image_index)
+	
+		if image_index % 5000 == 0:
+			image_files = os.path.join(os.getcwd(), "image_files")
+			if not os.path.exists(image_files):
+				os.mkdir(image_files)
+			_create_images(nodenet, image_files)
 
 	_zero_gates(nodenet)
  
@@ -65,6 +75,21 @@ def _decay_learning_rate(nodenet):
 	nodenet.learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
 	return nodenet.learning_rate
+
+# VISUALIZE LEARNED IMAGES
+
+def _create_images(nodenet, image_files):
+	for node_index, node in enumerate(nodenet.layers[len(nodenet.layers)-1]):
+		weight_matrix = [link.weight for link in nodenet.links_list[0][node_index]]
+
+		chunk_length = int(sqrt(len(weight_matrix)))
+		image = [weight_matrix[i:i+chunk_length] 
+		for i in range(0, len(weight_matrix), chunk_length)]
+
+		filepath = os.path.join(image_files, "node" + str(node_index) + ".png")
+		plt.imshow(image, cmap="gray")
+
+		plt.savefig(filepath)
 
 # HELPER FUNCTIONS
 

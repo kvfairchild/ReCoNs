@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from datetime import timedelta
-import time
 import numpy as np
+import time
 
 from nodenet import config
 from nodenet import control
