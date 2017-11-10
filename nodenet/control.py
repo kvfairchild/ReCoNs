@@ -8,30 +8,8 @@ import os
 from .nodenet import Nodenet
 
 def run(nodenet, target_output, image_index, run_type):
-<<<<<<< HEAD
-		output = _step_function(nodenet) # one hot output
-		predicted_int = _one_hot_to_int(output) # integer output
-		target_int = _one_hot_to_int(target_output) # integer label
-		error_array = target_output - output
-
-		global error_count
-		error_count = 0 if image_index == 0 else error_count
-
-		if predicted_int == target_int:
-			print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
-		else:
-			print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
-			error_count += 1
-		
-		success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
-		print "success rate: ", success_rate, "%"
-
-		if run_type == "train":
-			_update_weights(nodenet, error_array, image_index)
-
-		_zero_gates(nodenet)
-=======
 	output = _step_function(nodenet) # one hot output
+
 	error_array = target_output - output
 
 	_pretty_print(output, target_output, image_index)
@@ -46,7 +24,6 @@ def run(nodenet, target_output, image_index, run_type):
 			_create_images(nodenet, image_files)
 
 	_zero_gates(nodenet)
->>>>>>> master
  
 def _step_function(nodenet):
 
@@ -58,11 +35,7 @@ def _step_function(nodenet):
         if i == len(nodenet.layers)-1:
         	output = [gate.activation for node in layer for gate in node.gate_vector]
 
-<<<<<<< HEAD
     return _softmax(output) # apply softmax
-=======
-    return _softmax(output) # apply softmax function
->>>>>>> master
 
 # call node function for nodes that received activation
 def _net_function(nodenet):
@@ -85,7 +58,6 @@ def _link_function(nodenet):
 # UPDATE LINK WEIGHTS
 
 def _update_weights(nodenet, error_array, image_index):
-<<<<<<< HEAD
 	output_links = nodenet.links_list[len(nodenet.layers)-2]
 	INITIAL_LEARNING_RATE = .05
 	RATE_DECAY = .0001
@@ -93,24 +65,27 @@ def _update_weights(nodenet, error_array, image_index):
 
 	# set and decay learning rate 
 	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
-=======
+
 	output_links = nodenet.links_list[len(nodenet.links_list)-1]
 	learning_rate = _decay_learning_rate(nodenet)
->>>>>>> master
 		
 	# set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
 
-<<<<<<< HEAD
 		for i in range(len(nodenet.layers[len(nodenet.layers)-2])):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
+
+			for origin_node in nodenet.links_list[0]: # assumes 3 layer MLP
+				for origin_link in origin_node:
+					if origin_link.target_node == link.origin_node:
+						origin_link.weight += learning_rate * origin_link.origin_gate.activation * error_array[node_index]
 
 def _decay_learning_rate(learning_rate, RATE_DECAY):
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
 	return learning_rate
-=======
+
 		for i in range(len(output_node)):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
@@ -138,7 +113,6 @@ def _create_images(nodenet, image_files):
 		plt.imshow(image, cmap="gray")
 
 		plt.savefig(filepath)
->>>>>>> master
 
 # HELPER FUNCTIONS
 
