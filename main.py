@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from datetime import timedelta
-import time
 import numpy as np
+import time
 
 from nodenet import config
 from nodenet import control
@@ -32,7 +32,11 @@ def run_nodenet(nodenet, data, run_type):
 	# feed images into network
 	for i, image in enumerate(images):
 
+<<<<<<< HEAD
 		config.set_activation(nodenet, images[i])
+=======
+		config.set_activation(nodenet, image)
+>>>>>>> master
 		control.run(nodenet, labels[i], i, run_type)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))

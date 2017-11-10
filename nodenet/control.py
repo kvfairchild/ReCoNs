@@ -1,9 +1,14 @@
 from __future__ import division
+from math import sqrt
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import numpy as np
+import os
 
 from .nodenet import Nodenet
 
 def run(nodenet, target_output, image_index, run_type):
+<<<<<<< HEAD
 		output = _step_function(nodenet) # one hot output
 		predicted_int = _one_hot_to_int(output) # integer output
 		target_int = _one_hot_to_int(target_output) # integer label
@@ -25,6 +30,23 @@ def run(nodenet, target_output, image_index, run_type):
 			_update_weights(nodenet, error_array, image_index)
 
 		_zero_gates(nodenet)
+=======
+	output = _step_function(nodenet) # one hot output
+	error_array = target_output - output
+
+	_pretty_print(output, target_output, image_index)
+
+	if run_type == "train":
+		_update_weights(nodenet, error_array, image_index)
+	
+		if image_index % 5000 == 0:
+			image_files = os.path.join(os.getcwd(), "image_files")
+			if not os.path.exists(image_files):
+				os.mkdir(image_files)
+			_create_images(nodenet, image_files)
+
+	_zero_gates(nodenet)
+>>>>>>> master
  
 def _step_function(nodenet):
 
@@ -36,7 +58,11 @@ def _step_function(nodenet):
         if i == len(nodenet.layers)-1:
         	output = [gate.activation for node in layer for gate in node.gate_vector]
 
+<<<<<<< HEAD
     return _softmax(output) # apply softmax
+=======
+    return _softmax(output) # apply softmax function
+>>>>>>> master
 
 # call node function for nodes that received activation
 def _net_function(nodenet):
@@ -59,6 +85,7 @@ def _link_function(nodenet):
 # UPDATE LINK WEIGHTS
 
 def _update_weights(nodenet, error_array, image_index):
+<<<<<<< HEAD
 	output_links = nodenet.links_list[len(nodenet.layers)-2]
 	INITIAL_LEARNING_RATE = .05
 	RATE_DECAY = .0001
@@ -66,10 +93,15 @@ def _update_weights(nodenet, error_array, image_index):
 
 	# set and decay learning rate 
 	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
+=======
+	output_links = nodenet.links_list[len(nodenet.links_list)-1]
+	learning_rate = _decay_learning_rate(nodenet)
+>>>>>>> master
 		
 	# set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
 
+<<<<<<< HEAD
 		for i in range(len(nodenet.layers[len(nodenet.layers)-2])):
 			link = output_node[i]
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
@@ -78,8 +110,53 @@ def _decay_learning_rate(learning_rate, RATE_DECAY):
 	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
 	
 	return learning_rate
+=======
+		for i in range(len(output_node)):
+			link = output_node[i]
+			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
+
+
+def _decay_learning_rate(nodenet):
+	learning_rate = nodenet.learning_rate
+	RATE_DECAY = nodenet.RATE_DECAY
+
+	nodenet.learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
+	
+	return nodenet.learning_rate
+
+# VISUALIZE LEARNED IMAGES
+
+def _create_images(nodenet, image_files):
+	for node_index, node in enumerate(nodenet.layers[len(nodenet.layers)-1]):
+		weight_matrix = [link.weight for link in nodenet.links_list[0][node_index]]
+
+		chunk_length = int(sqrt(len(weight_matrix)))
+		image = [weight_matrix[i:i+chunk_length] 
+		for i in range(0, len(weight_matrix), chunk_length)]
+
+		filepath = os.path.join(image_files, "node" + str(node_index) + ".png")
+		plt.imshow(image, cmap="gray")
+
+		plt.savefig(filepath)
+>>>>>>> master
 
 # HELPER FUNCTIONS
+
+def _pretty_print(output, target_output, image_index):
+	predicted_int = _one_hot_to_int(output) # integer output
+	target_int = _one_hot_to_int(target_output) # integer label
+
+	global error_count
+	error_count = 0 if image_index == 0 else error_count
+
+	if predicted_int == target_int:
+		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
+	else:
+		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
+		error_count += 1
+	
+	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
+	print "success rate: ", success_rate, "%"
 
 def _zero_gates(nodenet):
 	for layer in nodenet.links_list:
@@ -91,10 +168,6 @@ def _zero_gates(nodenet):
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight
 	link.target_slot.activation = link.target_slot.activation + activation
-
-def _is_exit_node(nodenet, link):
-	return link.target_node.name == nodenet.exit_node_list[0]\
-	and link.target_slot.name == nodenet.exit_node_list[1]
 
 def _softmax(output):
 	exp_output = np.exp(output - np.max(output))
