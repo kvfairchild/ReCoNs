@@ -1,12 +1,13 @@
 from uuid import uuid4
 
 class Node:
-    def __init__(self, name=None, slot_vector=None, gate_vector=None, node_function=None):
+    def __init__(self, name=None, slot_vector=None, gate_vector=None, node_function=None, activation=0):
         self.uid = uuid4()
         self.name = name
         self.node_function = node_function if node_function is not None else self._default_node_function
         self.slot_vector = slot_vector
         self.gate_vector = gate_vector
+        self.activation = activation
 
     @property
     def name(self):

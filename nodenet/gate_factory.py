@@ -4,7 +4,7 @@ GATE_TYPES = {
     "gen": [
         "gen",
         0,
-        {"threshold": 0}
+        {"threshold": -20}
     ],
     "por": [
         "por",

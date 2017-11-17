@@ -1,4 +1,5 @@
 from __future__ import division
+from itertools import groupby
 from math import sqrt
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -8,20 +9,18 @@ import os
 from .nodenet import Nodenet
 
 def run(nodenet, target_output, image_index, run_type):
-	output = _step_function(nodenet) # one hot output
-
-	error_array = target_output - output
+	output = _step_function(nodenet) # softmax output
 
 	_pretty_print(output, target_output, image_index)
 
 	if run_type == "train":
-		_update_weights(nodenet, error_array, image_index)
+		_update_weights(nodenet, output, target_output, image_index)
 	
-		if image_index % 5000 == 0:
-			image_files = os.path.join(os.getcwd(), "image_files")
-			if not os.path.exists(image_files):
-				os.mkdir(image_files)
-			_create_images(nodenet, image_files)
+		# if image_index % 5000 == 0:
+		# 	image_files = os.path.join(os.getcwd(), "image_files")
+		# 	if not os.path.exists(image_files):
+		# 		os.mkdir(image_files)
+		# 	_create_images(nodenet, image_files)
 
 	_zero_gates(nodenet)
  
@@ -43,7 +42,7 @@ def _net_function(nodenet):
 
 	for node in node_dict.values():
 		for slot in node.slot_vector:
-			if slot.activation > 0:
+			if slot.activation != 0:
 				node.node_function(slot.activation)
 				slot.activation = 0
 
@@ -57,39 +56,34 @@ def _link_function(nodenet):
 
 # UPDATE LINK WEIGHTS
 
-def _update_weights(nodenet, error_array, image_index):
-	output_links = nodenet.links_list[len(nodenet.layers)-2]
-	INITIAL_LEARNING_RATE = .05
-	RATE_DECAY = .0001
-	global learning_rate
-
-	# set and decay learning rate 
-	learning_rate = INITIAL_LEARNING_RATE if image_index == 0 else _decay_learning_rate(learning_rate, RATE_DECAY)
-
+def _update_weights(nodenet, output, target_output, image_index):
 	output_links = nodenet.links_list[len(nodenet.links_list)-1]
 	learning_rate = _decay_learning_rate(nodenet)
-		
+
+	error_array = target_output - output
+
 	# set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
 
-		for i in range(len(nodenet.layers[len(nodenet.layers)-2])):
-			link = output_node[i]
-			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
-
-			for origin_node in nodenet.links_list[0]: # assumes 3 layer MLP
-				for origin_link in origin_node:
-					if origin_link.target_node == link.origin_node:
-						origin_link.weight += learning_rate * origin_link.origin_gate.activation * error_array[node_index]
-
-def _decay_learning_rate(learning_rate, RATE_DECAY):
-	learning_rate = learning_rate * (learning_rate / (learning_rate + (learning_rate * RATE_DECAY)))
-	
-	return learning_rate
+		derivative = (1 - output[node_index]) * output[node_index]
+		output_signal = derivative * (output[node_index] - target_output[node_index])
 
 		for i in range(len(output_node)):
 			link = output_node[i]
+			link.origin_node.activation += output_signal * link.weight
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
 
+	_backprop(nodenet)
+
+def _backprop(nodenet):
+	hidden_links = _get_hidden_links(nodenet)
+
+	for node_index, target_node in enumerate(nodenet.layers[1]):
+		links = hidden_links[node_index]
+		for link in links:
+			link.weight += _tanh_deriv(link.origin_gate.activation) * link.target_node.activation
+	
+	_zero_nodes(nodenet)
 
 def _decay_learning_rate(nodenet):
 	learning_rate = nodenet.learning_rate
@@ -157,3 +151,27 @@ def _one_hot_to_int(one_hot):
 			max_index = node_index
 
 	return max_index
+
+def _tanh_deriv(t):
+	return 1.0 - np.tanh(t)**2
+
+def _get_hidden_links(nodenet):
+	hidden_links = [link for node in nodenet.links_list[0] for link in node]
+
+	# sort hidden layer links by target node
+	key = lambda x: x.target_node
+	hidden_links_by_target = sorted(hidden_links, key=key)
+	
+	return [list(g) for k, g in groupby(hidden_links_by_target, key)]
+
+def _zero_nodes(nodenet):
+	for layer in nodenet.layers:
+		for node in layer:
+			if node.activation > 0:
+				node.activation = 0
+
+def _cross_entropy(output, target_output):
+	node_index = np.argmax(target_output)
+	return -np.log(output[node_index])
+
+

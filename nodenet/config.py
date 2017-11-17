@@ -47,18 +47,6 @@ def set_activation(nodenet, image):
 
 	for i, node in enumerate(nodenet.layers[0]):
 
-<<<<<<< HEAD
-		for pixel in flattened_image[i]:
-
-			pixel = pixel * (1/255) # normalize values between [0,1]
-			slot = node.get_slot("gen")
-			slot.activation = pixel
-
-			activation.append(slot.activation)
-
-	return np.array(activation)
-=======
 		pixel = flattened_image[i] * (1/255) # normalize values between [0,1]
 		slot = node.get_slot("gen")
 		slot.activation = pixel[0]
->>>>>>> master
