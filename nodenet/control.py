@@ -17,24 +17,24 @@ def run(nodenet, target_output, image_index, run_type):
 		_update_weights(nodenet, output, target_output, image_index)
 	
 		# if image_index % 5000 == 0:
-		# 	image_files = os.path.join(os.getcwd(), "image_files")
-		# 	if not os.path.exists(image_files):
-		# 		os.mkdir(image_files)
-		# 	_create_images(nodenet, image_files)
+		#   image_files = os.path.join(os.getcwd(), "image_files")
+		#   if not os.path.exists(image_files):
+		#       os.mkdir(image_files)
+		#   _create_images(nodenet, image_files)
 
 	_zero_gates(nodenet)
  
 def _step_function(nodenet):
 
-    for i, layer in enumerate(nodenet.layers):
-        _net_function(nodenet)
-        _link_function(nodenet)
+	for i, layer in enumerate(nodenet.layers):
+		_net_function(nodenet)
+		_link_function(nodenet)
 
-        # fetch output from last layer
-        if i == len(nodenet.layers)-1:
-        	output = [gate.activation for node in layer for gate in node.gate_vector]
+		# fetch output from last layer
+		if i == len(nodenet.layers)-1:
+			output = [gate.activation for node in layer for gate in node.gate_vector]
 
-    return _softmax(output) # apply softmax
+	return _softmax(output) # apply softmax
 
 # call node function for nodes that received activation
 def _net_function(nodenet):
@@ -62,15 +62,15 @@ def _update_weights(nodenet, output, target_output, image_index):
 
 	error_array = target_output - output
 
-	# set weights for each link to output nodes
+	# calculate and set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
-
-		derivative = (1 - output[node_index]) * output[node_index]
-		output_signal = derivative * (output[node_index] - target_output[node_index])
 
 		for i in range(len(output_node)):
 			link = output_node[i]
-			link.origin_node.activation += output_signal * link.weight
+
+			# sum weighted errors and store on link origin nodes
+			link.origin_node.activation += link.weight * error_array[node_index]
+			
 			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
 
 	_backprop(nodenet)
@@ -152,10 +152,9 @@ def _one_hot_to_int(one_hot):
 
 	return max_index
 
-def _tanh_deriv(t):
-	return 1.0 - np.tanh(t)**2
+# BACKPROP HELPERS
 
-def _get_hidden_links(nodenet):
+def _get_hidden_links(nodenet): # returns links connecting layer0 nodes to layer1
 	hidden_links = [link for node in nodenet.links_list[0] for link in node]
 
 	# sort hidden layer links by target node
@@ -164,14 +163,16 @@ def _get_hidden_links(nodenet):
 	
 	return [list(g) for k, g in groupby(hidden_links_by_target, key)]
 
-def _zero_nodes(nodenet):
+def _tanh_deriv(t):
+  return 1.0 - np.tanh(t)**2
+
+# def _cross_entropy(output, target_output):
+#   node_index = np.argmax(target_output)
+#   return -np.log(output[node_index])
+
+def _zero_nodes(nodenet): # resets node activation (which holds backprop value)
 	for layer in nodenet.layers:
 		for node in layer:
 			if node.activation > 0:
 				node.activation = 0
-
-def _cross_entropy(output, target_output):
-	node_index = np.argmax(target_output)
-	return -np.log(output[node_index])
-
 
