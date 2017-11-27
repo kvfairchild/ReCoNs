@@ -61,29 +61,33 @@ def _update_weights(nodenet, output, target_output, image_index):
 	learning_rate = _decay_learning_rate(nodenet)
 
 	error_array = target_output - output
+	# cross_entropy = (-target_output * np.log(output)) - ((1-target_output) * np.log(1-output))
+	# cost = np.mean(cross_entropy)
 
 	# calculate and set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
+
+		error = error_array[node_index]
 
 		for i in range(len(output_node)):
 			link = output_node[i]
 
 			# sum weighted errors and store on link origin nodes
-			link.origin_node.activation += link.weight * error_array[node_index]
+			link.origin_node.activation += link.weight * error
 			
-			link.weight += learning_rate * link.origin_gate.activation * error_array[node_index]
+			link.weight += learning_rate * link.origin_gate.activation * error
 
-	_backprop(nodenet)
+	_backprop(nodenet, learning_rate)
+	_zero_nodes(nodenet)
 
-def _backprop(nodenet):
+def _backprop(nodenet, learning_rate):
 	hidden_links = _get_hidden_links(nodenet)
 
-	for node_index, target_node in enumerate(nodenet.layers[1]):
+	for node_index, node in enumerate(nodenet.layers[1]):
 		links = hidden_links[node_index]
 		for link in links:
-			link.weight += _tanh_deriv(link.origin_gate.activation) * link.target_node.activation
-	
-	_zero_nodes(nodenet)
+			target_errors = link.target_node.activation
+			link.weight += learning_rate * link.origin_gate.activation * target_errors
 
 def _decay_learning_rate(nodenet):
 	learning_rate = nodenet.learning_rate
@@ -163,8 +167,8 @@ def _get_hidden_links(nodenet): # returns links connecting layer0 nodes to layer
 	
 	return [list(g) for k, g in groupby(hidden_links_by_target, key)]
 
-def _tanh_deriv(t):
-  return 1.0 - np.tanh(t)**2
+# def _tanh_deriv(t):
+#   return 1.0 - np.tanh(t)**2
 
 # def _cross_entropy(output, target_output):
 #   node_index = np.argmax(target_output)
@@ -173,6 +177,5 @@ def _tanh_deriv(t):
 def _zero_nodes(nodenet): # resets node activation (which holds backprop value)
 	for layer in nodenet.layers:
 		for node in layer:
-			if node.activation > 0:
-				node.activation = 0
+			node.activation = 0
 
