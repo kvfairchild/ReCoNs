@@ -22,6 +22,7 @@ def run(nodenet, target_output, image_index, run_type):
 		#       os.mkdir(image_files)
 		#   _create_images(nodenet, image_files)
 
+	_zero_nodes(nodenet)
 	_zero_gates(nodenet)
  
 def _step_function(nodenet):
@@ -61,8 +62,7 @@ def _update_weights(nodenet, output, target_output, image_index):
 	learning_rate = _decay_learning_rate(nodenet)
 
 	error_array = target_output - output
-	# cross_entropy = (-target_output * np.log(output)) - ((1-target_output) * np.log(1-output))
-	# cost = np.mean(cross_entropy)
+	# cross_entropy = _cross_entropy(output, target_output)
 
 	# calculate and set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
@@ -77,17 +77,21 @@ def _update_weights(nodenet, output, target_output, image_index):
 			
 			link.weight += learning_rate * link.origin_gate.activation * error
 
-	_backprop(nodenet, learning_rate)
-	_zero_nodes(nodenet)
+	if len(nodenet.links_list) > 1:
+		_backprop(nodenet, learning_rate)
 
 def _backprop(nodenet, learning_rate):
-	hidden_links = _get_hidden_links(nodenet)
+	i = len(nodenet.links_list)-1
 
-	for node_index, node in enumerate(nodenet.layers[1]):
-		links = hidden_links[node_index]
-		for link in links:
-			target_errors = link.target_node.activation
-			link.weight += learning_rate * link.origin_gate.activation * target_errors
+	while i > 0:
+		prior_layer_links = _get_prior_layer_links(nodenet, i)
+
+		for node_index, node in enumerate(nodenet.layers[i]):
+			links = prior_layer_links[node_index]
+			for link in links:
+				target_errors = link.target_node.activation
+				link.weight += learning_rate * link.origin_gate.activation * target_errors
+		i -= 1
 
 def _decay_learning_rate(nodenet):
 	learning_rate = nodenet.learning_rate
@@ -158,8 +162,8 @@ def _one_hot_to_int(one_hot):
 
 # BACKPROP HELPERS
 
-def _get_hidden_links(nodenet): # returns links connecting layer0 nodes to layer1
-	hidden_links = [link for node in nodenet.links_list[0] for link in node]
+def _get_prior_layer_links(nodenet, i): # returns links connecting layer0 nodes to layer1
+	hidden_links = [link for node in nodenet.links_list[i-1] for link in node]
 
 	# sort hidden layer links by target node
 	key = lambda x: x.target_node
@@ -170,9 +174,9 @@ def _get_hidden_links(nodenet): # returns links connecting layer0 nodes to layer
 # def _tanh_deriv(t):
 #   return 1.0 - np.tanh(t)**2
 
-# def _cross_entropy(output, target_output):
-#   node_index = np.argmax(target_output)
-#   return -np.log(output[node_index])
+def _cross_entropy(output, target_output):
+  node_index = np.argmax(target_output)
+  return -np.log(output[node_index])
 
 def _zero_nodes(nodenet): # resets node activation (which holds backprop value)
 	for layer in nodenet.layers:
