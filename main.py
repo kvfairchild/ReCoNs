@@ -8,11 +8,10 @@ from nodenet import control
 from nodenet.nodenet import Nodenet
 from nodenet.file_parser import MNIST_file_parser
 
-#from test.input_config import *
 
 def build_nodenet(nodenet):
 
-	# OPTIMAL CONFIGURATIONS:
+	# OPTIMAL INITIALIZATION (link.py)
 	# 2 layers: initial weights random.uniform(0, .5)
 	# 3+ layers: initial weights random.uniform(-.25, .25)
 

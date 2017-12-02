@@ -135,13 +135,6 @@ def _pretty_print(output, target_output, image_index):
 	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
 	print "success rate: ", success_rate, "%"
 
-def _zero_gates(nodenet):
-	for layer in nodenet.links_list:
-		for node in layer:
-			for link in node:
-				if link.origin_gate.activation != 0:
-					link.origin_gate.activation = 0
-
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight
 	link.target_slot.activation = link.target_slot.activation + activation
@@ -161,6 +154,12 @@ def _one_hot_to_int(one_hot):
 
 	return max_index
 
+def _zero_gates(nodenet):
+	for layer in nodenet.links_list:
+		for node in layer:
+			for link in node:
+				link.origin_gate.activation = 0
+
 # BACKPROP HELPERS
 
 def _get_prior_layer_links(nodenet, i): # returns links connecting layeri nodes to layeri-1
@@ -171,10 +170,6 @@ def _get_prior_layer_links(nodenet, i): # returns links connecting layeri nodes 
 	hidden_links_by_target = sorted(hidden_links, key=key)
 	
 	return [list(g) for k, g in groupby(hidden_links_by_target, key)]
-
-def _cross_entropy(output, target_output):
-  node_index = np.argmax(target_output)
-  return -np.log(output[node_index])
 
 def _tanh_deriv(t):
 	return 1.0 - np.tanh(t)**2
