@@ -4,8 +4,8 @@ class Nodenet:
 	def __init__(self, name = None):
 		self.uid = uuid4()
 		self.name = name
-		self.learning_rate = .1
-		self.RATE_DECAY = .0005
+		self.learning_rate = .05
+		self.RATE_DECAY = .0001
 		self.node_dict = {}
 		self.layers = []
 		self.links_list = []

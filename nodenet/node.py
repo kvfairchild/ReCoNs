@@ -28,6 +28,6 @@ class Node:
                 return gate
                 
     def _default_node_function(self, activation):
-    #calls all gate functions, passes value from slot
+    # calls all gate functions, passes value from slot
         for gate in self.gate_vector:
             gate.gate_function(activation)

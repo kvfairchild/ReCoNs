@@ -16,12 +16,13 @@ def run(nodenet, target_output, image_index, run_type):
 	if run_type == "train":
 		_update_weights(nodenet, output, target_output, image_index)
 	
+		# # print images of digit recognition
 		# if image_index % 5000 == 0:
 		#   image_files = os.path.join(os.getcwd(), "image_files")
 		#   if not os.path.exists(image_files):
 		#       os.mkdir(image_files)
 		#   _create_images(nodenet, image_files)
-
+	
 	_zero_nodes(nodenet)
 	_zero_gates(nodenet)
  
@@ -60,20 +61,17 @@ def _link_function(nodenet):
 def _update_weights(nodenet, output, target_output, image_index):
 	output_links = nodenet.links_list[len(nodenet.links_list)-1]
 	learning_rate = _decay_learning_rate(nodenet)
-
 	error_array = target_output - output
-	# cross_entropy = _cross_entropy(output, target_output)
 
 	# calculate and set weights for each link to output nodes
 	for node_index, output_node in enumerate(output_links):
-
 		error = error_array[node_index]
 
 		for i in range(len(output_node)):
 			link = output_node[i]
 
-			# sum weighted errors and store on link origin nodes
-			link.origin_node.activation += link.weight * error
+			# store weighted errors on link origin nodes
+			link.origin_node.activation += link.weight * error * _tanh_deriv(link.origin_gate.activation)
 			
 			link.weight += learning_rate * link.origin_gate.activation * error
 
@@ -81,16 +79,21 @@ def _update_weights(nodenet, output, target_output, image_index):
 		_backprop(nodenet, learning_rate)
 
 def _backprop(nodenet, learning_rate):
-	i = len(nodenet.links_list)-1
+	i = len(nodenet.layers)-2
 
 	while i > 0:
 		prior_layer_links = _get_prior_layer_links(nodenet, i)
 
 		for node_index, node in enumerate(nodenet.layers[i]):
 			links = prior_layer_links[node_index]
+
 			for link in links:
-				target_errors = link.target_node.activation
-				link.weight += learning_rate * link.origin_gate.activation * target_errors
+				error = link.target_node.activation
+
+				# store weighted errors on link origin nodes
+				link.origin_node.activation += link.weight * error * _tanh_deriv(link.origin_gate.activation)
+				
+				link.weight += learning_rate * link.origin_gate.activation * error
 		i -= 1
 
 def _decay_learning_rate(nodenet):
@@ -106,14 +109,12 @@ def _decay_learning_rate(nodenet):
 def _create_images(nodenet, image_files):
 	for node_index, node in enumerate(nodenet.layers[len(nodenet.layers)-1]):
 		weight_matrix = [link.weight for link in nodenet.links_list[0][node_index]]
-
 		chunk_length = int(sqrt(len(weight_matrix)))
 		image = [weight_matrix[i:i+chunk_length] 
 		for i in range(0, len(weight_matrix), chunk_length)]
-
 		filepath = os.path.join(image_files, "node" + str(node_index) + ".png")
-		plt.imshow(image, cmap="gray")
 
+		plt.imshow(image, cmap="gray")
 		plt.savefig(filepath)
 
 # HELPER FUNCTIONS
@@ -138,7 +139,7 @@ def _zero_gates(nodenet):
 	for layer in nodenet.links_list:
 		for node in layer:
 			for link in node:
-				if link.origin_gate.activation > 0:
+				if link.origin_gate.activation != 0:
 					link.origin_gate.activation = 0
 
 def _send_activation_to_target_slot(link):
@@ -162,7 +163,7 @@ def _one_hot_to_int(one_hot):
 
 # BACKPROP HELPERS
 
-def _get_prior_layer_links(nodenet, i): # returns links connecting layer0 nodes to layer1
+def _get_prior_layer_links(nodenet, i): # returns links connecting layeri nodes to layeri-1
 	hidden_links = [link for node in nodenet.links_list[i-1] for link in node]
 
 	# sort hidden layer links by target node
@@ -171,12 +172,12 @@ def _get_prior_layer_links(nodenet, i): # returns links connecting layer0 nodes 
 	
 	return [list(g) for k, g in groupby(hidden_links_by_target, key)]
 
-# def _tanh_deriv(t):
-#   return 1.0 - np.tanh(t)**2
-
 def _cross_entropy(output, target_output):
   node_index = np.argmax(target_output)
   return -np.log(output[node_index])
+
+def _tanh_deriv(t):
+	return 1.0 - np.tanh(t)**2
 
 def _zero_nodes(nodenet): # resets node activation (which holds backprop value)
 	for layer in nodenet.layers:
