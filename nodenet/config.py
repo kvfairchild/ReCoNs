@@ -76,6 +76,7 @@ def initialize_net(nodenet, network_dimensions):
 	with open(filepath, "rb") as file:
 		weight_matrix = pickle.load(file)
 
+	# set nodenet link weights to saved weight values
 	for layer_index, layer in enumerate(nodenet.links_list):
 		for node_index, node in enumerate(layer):
 			for link_index, link in enumerate(node):
