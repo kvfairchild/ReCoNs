@@ -37,7 +37,7 @@ def _extract_images(image_file):
     cols = _read32(f)
     buf = f.read(rows * cols * num_images)
     data = np.frombuffer(buf, dtype=np.uint8)
-    data = data.reshape(num_images, rows, cols, 1)
+    data = data.reshape(num_images, rows, cols)
     return data    
 
 def _extract_labels(label_file):
@@ -57,4 +57,12 @@ def _one_hot(labels):
     index_offset = np.arange(num_labels) * 10
     labels_one_hot = np.zeros((num_labels, 10))
     labels_one_hot.flat[index_offset + labels.ravel()] = 1
-    return labels_one_hot
+
+    # add extra values for math operator labels
+    labels_extended = []
+    for i, label in enumerate(labels_one_hot):
+        math_ops_label = np.zeros(4)
+        label = np.append(label, [0, 0, 0, 0])
+
+        labels_extended.append(label)
+    return labels_extended

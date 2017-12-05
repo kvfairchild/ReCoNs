@@ -7,11 +7,13 @@ This is a from-scratch net that does not employ machine learning libraries.  Due
 ## Run
 Use the following command to specify network dimensions, build, run, and test an *n*-layer MNIST classifier:
 
-#### ./main.py 784,...,10
+#### ./main.py
 
-For example, the following input will build a 3-layer classifier with 784 input nodes, 60 hidden nodes, and 10 output nodes:
+The default is set to a 3-layer classifier with 784 input nodes, 60 hidden nodes, and 10 output nodes.
 
-    ./main.py 784,60,10
+Number of layers and number of nodes per layer can be set in main.py:
+
+    network_dimensions = [784, 60, 10]
 
 Uncomment the following code block in nodenet/control.py to create a folder of final learned digit representations (works for 2 layers only):
 

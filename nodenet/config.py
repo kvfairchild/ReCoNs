@@ -51,7 +51,7 @@ def set_activation(nodenet, image):
 
 		pixel = flattened_image[i] * (1/255) # normalize values between [0,1]
 		slot = node.get_slot("gen")
-		slot.activation = pixel[0]
+		slot.activation = pixel
 
 # PRETRAINED NETWORK
 
@@ -72,6 +72,8 @@ def initialize_net(nodenet, network_dimensions):
 	if not os.path.exists(config_specs):
 		raise ValueError("no pretrained networks are available")
 	filepath = os.path.join(config_specs, str(network_dimensions) + ".py")
+	if not filepath.exists():
+		raise ValueError("please enter dimensions for an available pretrained network")
 
 	with open(filepath, "rb") as file:
 		weight_matrix = pickle.load(file)
