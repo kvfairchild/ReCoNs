@@ -72,7 +72,7 @@ def initialize_net(nodenet, network_dimensions):
 	if not os.path.exists(config_specs):
 		raise ValueError("no pretrained networks are available")
 	filepath = os.path.join(config_specs, str(network_dimensions) + ".py")
-	if not filepath.exists():
+	if not os.path.exists(filepath):
 		raise ValueError("please enter dimensions for an available pretrained network")
 
 	with open(filepath, "rb") as file:

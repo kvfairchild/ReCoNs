@@ -121,16 +121,16 @@ def _create_images(nodenet):
 # HELPER FUNCTIONS
 
 def _pretty_print(output, target_output, image_index):
-	predicted_int = _one_hot_to_int(output) # integer output
-	target_int = _one_hot_to_int(target_output) # integer label
-
 	global error_count
 	error_count = 0 if image_index == 0 else error_count
 
-	if predicted_int == target_int:
-		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int, "HIT"
+	prediction = _get_symbol(output)
+	target = _get_symbol(target_output)
+
+	if prediction == target:
+		print "#", image_index+1, "prediction: ", prediction, " target: ", target, "HIT"
 	else:
-		print "#", image_index+1, "prediction: ", predicted_int, " target: ", target_int
+		print "#", image_index+1, "prediction: ", prediction, " target: ", target
 		error_count += 1
 	
 	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
@@ -160,6 +160,21 @@ def _zero_gates(nodenet):
 		for node in layer:
 			for link in node:
 				link.origin_gate.activation = 0
+
+def _get_symbol(prediction):
+	prediction = _one_hot_to_int(output) # integer output
+
+	if prediction <=9:
+		return prediction
+	elif prediction == 10:
+		return prediction == "+"
+	elif prediction == 11:
+		return prediction == "-"
+	elif prediction == 12:
+		return prediction == "*"
+	elif prediction == 13:
+		return prediction == "\\"
+
 
 # BACKPROP HELPERS
 
