@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 from .link import Link
-from .node_factory import node_factory
+from .node import node_factory
 from .nodenet import Nodenet
 
 # NODES

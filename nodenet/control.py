@@ -162,18 +162,18 @@ def _zero_gates(nodenet):
 				link.origin_gate.activation = 0
 
 def _get_symbol(prediction):
-	prediction = _one_hot_to_int(output) # integer output
+	prediction = _one_hot_to_int(prediction) # integer output
 
 	if prediction <=9:
 		return prediction
 	elif prediction == 10:
-		return prediction == "+"
+		return "+"
 	elif prediction == 11:
-		return prediction == "-"
+		return "-"
 	elif prediction == 12:
-		return prediction == "*"
+		return "*"
 	elif prediction == 13:
-		return prediction == "\\"
+		return "\\"
 
 
 # BACKPROP HELPERS
