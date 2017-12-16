@@ -45,11 +45,12 @@ def _flatten_image(image):
 	return [pixel for row in image for pixel in row]
 			
 def set_activation(nodenet, image):
-	flattened_image = _flatten_image(image)
+	if len(image.shape) > 1:
+		image = _flatten_image(image)
 
 	for i, node in enumerate(nodenet.layers[0]):
 
-		pixel = flattened_image[i] * (1/255) # normalize values between [0,1]
+		pixel = image[i] * (1/255) # normalize values between [0,1]
 		slot = node.get_slot("gen")
 		slot.activation = pixel
 

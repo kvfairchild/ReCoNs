@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from datetime import timedelta
 import os
 import numpy as np
@@ -6,8 +7,8 @@ import time
 import sys
 
 from data.process_data import *
-from data.datasets.functions import image_prep
-
+from data.datasets.math_ops import math_ops_data_prep
+from function_approximator import function_approximator
 from nodenet import config
 from nodenet import control
 from nodenet.nodenet import Nodenet
@@ -33,8 +34,8 @@ def run_nodenet(nodenet, run_type, *data):
 	# feed images into network
 	for i, image in enumerate(images):
 
-	  config.set_activation(nodenet, image)
-	  control.run(nodenet, labels[i], i, run_type)
+		config.set_activation(nodenet, image)
+		control.run(nodenet, labels[i], i, run_type)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))
 
@@ -44,20 +45,27 @@ if __name__ == "__main__":
 	nodenet = Nodenet()
 	network_dimensions = build_nodenet(nodenet)
 
+	# math_ops_data_prep.data_prep()
+
+	# FUNCTION APPROXIMATOR
+	# function_approximator(nodenet, network_dimensions)
+
 	# TRAIN
 	MNIST_data = parse_data("MNIST", "training")
 	math_ops_data = parse_data("math_ops", "training")
 	data = (MNIST_data, math_ops_data)
 	run_nodenet(nodenet, "train", *data)
-	# config.save_weights(nodenet, network_dimensions) # save trained network
+	config.save_weights(nodenet, network_dimensions) # save trained network
 
 	# TEST
+	MNIST_data = parse_data("MNIST", "testing")
+	math_ops_data = parse_data("math_ops", "testing")
+	data = (MNIST_data, math_ops_data)
+	run_nodenet(nodenet, "test", *data)
+
+	# PRETRAINED NET
 	# MNIST_data = parse_data("MNIST", "testing")
 	# math_ops_data = parse_data("math_ops", "testing")
 	# data = (MNIST_data, math_ops_data)
-	# run_nodenet(nodenet, "test", *data)
-
-	# PRETRAINED NET FOR FUNCTIONS
-	# image_prep.function_parser()
 	# config.initialize_net(nodenet, network_dimensions)
-	# run_nodenet(nodenet, "test")
+	# run_nodenet(nodenet, "test", *data)
