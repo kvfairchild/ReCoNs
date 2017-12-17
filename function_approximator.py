@@ -24,9 +24,10 @@ def function_approximator(nodenet, network_dimensions):
 
 	for s, subfolder in enumerate(os.listdir(symbols)):
 		subfolder = os.path.normpath(os.path.join(symbols, subfolder))
-		if os.path.isdir(subfolder):
-			function = subfolder
-			symbol_array = _run_approximator(nodenet, subfolder, function)
+		if s == 2:
+			if os.path.isdir(subfolder):
+				function = subfolder
+				symbol_array = _run_approximator(nodenet, subfolder, function)
 
 def _run_approximator(nodenet, subfolder, function):
 
