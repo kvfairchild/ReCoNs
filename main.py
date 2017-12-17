@@ -16,7 +16,7 @@ from nodenet.nodenet import Nodenet
 def build_nodenet(nodenet):
 
 	# enter nodes per layer
-	network_dimensions = [784, 14]
+	network_dimensions = [784, 60, 14]
 
 	node_data = config.generate_node_data(network_dimensions)
 	config.add_nodes(nodenet, node_data)
@@ -48,20 +48,20 @@ if __name__ == "__main__":
 	# math_ops_data_prep.data_prep()
 
 	# FUNCTION APPROXIMATOR
-	# function_approximator(nodenet, network_dimensions)
+	function_approximator(nodenet, network_dimensions)
 
-	# TRAIN
-	MNIST_data = parse_data("MNIST", "training")
-	math_ops_data = parse_data("math_ops", "training")
-	data = (MNIST_data, math_ops_data)
-	run_nodenet(nodenet, "train", *data)
-	config.save_weights(nodenet, network_dimensions) # save trained network
+	# # TRAIN
+	# MNIST_data = parse_data("MNIST", "training")
+	# math_ops_data = parse_data("math_ops", "training")
+	# data = (MNIST_data, math_ops_data)
+	# run_nodenet(nodenet, "train", *data)
+	# config.save_weights(nodenet, network_dimensions) # save trained network
 
-	# TEST
-	MNIST_data = parse_data("MNIST", "testing")
-	math_ops_data = parse_data("math_ops", "testing")
-	data = (MNIST_data, math_ops_data)
-	run_nodenet(nodenet, "test", *data)
+	# # TEST
+	# MNIST_data = parse_data("MNIST", "testing")
+	# math_ops_data = parse_data("math_ops", "testing")
+	# data = (MNIST_data, math_ops_data)
+	# run_nodenet(nodenet, "test", *data)
 
 	# PRETRAINED NET
 	# MNIST_data = parse_data("MNIST", "testing")

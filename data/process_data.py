@@ -50,7 +50,4 @@ def join_sets(MNIST_images, MNIST_labels, math_ops_images, math_ops_labels):
 	combined_images = [image for image, label in combined_zip]
 	combined_labels = [label for image, label in combined_zip]
 
-	combined_images = combined_images[:60000]
-	combined_labels = combined_labels[:60000]
-
 	return combined_images, combined_labels
