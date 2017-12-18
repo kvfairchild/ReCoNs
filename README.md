@@ -2,13 +2,13 @@
 
 ** Takes images of handwritten algebra functions as input and outputs the numeric value of the evaluated function. ** 
 
-![Image](../data/datasets/functions/function_data/0+1*2+3.png?raw=true)
+![Image](https://github.com/kvgallagher/nodenet/blob/master/data/datasets/functions/function_data/0+1*2+3.png?raw=true)
 
 A function image is first parsed into images of its component digits and symbols, which are then prepped according to [MNIST preprocessing directives](http://yann.lecun.com/exdb/mnist/) and fed into an *n*-layer perceptron pretrained on a combination of MNIST and mathematical operators (+, -, ×, ÷) adapted from [this Kaggle handwritten math symbols dataset](https://www.kaggle.com/xainano/handwrittenmathsymbols).
 
 The perceptron returns the predicted values of each function's digits and symbols in an array for that function.  This array is used to build a [Request Confirmation Network (ReCoN)](https://pdfs.semanticscholar.org/a7ac/e80b84c64329501a3a9906314c80c3614997.pdf) that represents the function in its structure:
 
-![Image](../ReCoN_structure_example.png?raw=true)
+![Image](https://github.com/kvgallagher/nodenet/blob/master/ReCoN_structure_example.png?raw=true)
 
 ReCoNs are an experimental network architecture designed to model neural execution of sensorimotor scripts.  
 
