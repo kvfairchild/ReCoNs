@@ -8,7 +8,7 @@ A function image is first parsed into images of its component digits and symbols
 
 The perceptron returns the predicted values of each function's digits and symbols in an array for that function.  This array is used to build a [Request Confirmation Network (ReCoN)](https://pdfs.semanticscholar.org/a7ac/e80b84c64329501a3a9906314c80c3614997.pdf) that represents the function in its structure:
 
-![Image](https://github.com/kvgallagher/nodenet/blob/master/ReCoN_structure.png?raw=true)
+![Image](https://github.com/kvgallagher/nodenet/blob/master/ReCoN_structure_ex.png?raw=true)
 
 ReCoNs are an experimental network architecture designed to model neural execution of sensorimotor scripts.  
 
