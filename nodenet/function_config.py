@@ -105,18 +105,16 @@ def create_link(recon, link_data):
 
 # PREPARE DATA AND SET ACTIVATION
 
-def _flatten_image(image):
-	return [pixel for row in image for pixel in row]
 			
-def set_activation(recon, image):
-	if len(image.shape) > 1:
-		image = _flatten_image(image)
+def set_activation(recon, symbol_array):
 
-	for i, node in enumerate(recon.layers[0]):
 
-		pixel = flattened_image[i] * (1/255) # normalize values between [0,1]
-		slot = node.get_slot("gen")
-		slot.activation = pixel[0]
+	for node in enumerate(nodenet.layers[0]):
+
+		print node.name
+
+		# slot = node.get_slot("sub")
+		# slot.activation = pixel[0]
 
 
 # HELPER FUNCTIONS

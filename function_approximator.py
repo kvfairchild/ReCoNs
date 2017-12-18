@@ -75,6 +75,8 @@ def _build_recon(recon, symbol_array):
 
 def _execute_function(recon, symbol_array):
 
-	recon.run_recon(recon)
+	function_config.set_activation(recon, symbol_array)
+	evaluated_function = recon.run(recon)
+	print evaluated_function
 
 

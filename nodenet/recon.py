@@ -1,4 +1,4 @@
-def run_recon(recon):
+def run(recon):
 
     """ ReCoN nodes are state machines that use the node activation for determining their behavior.
     They form hierarchical scripts that are started via sub-activating their top-node. If the sur-activation
