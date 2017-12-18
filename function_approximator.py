@@ -7,7 +7,7 @@ which execute the functions as scripts and return the numeric value as output.
 """
 
 import cv2
-from nodenet import config, function_config, function_control, recon
+from nodenet import config, function_control, recon_config, recon_control
 from nodenet.nodenet import Nodenet
 from data.datasets.functions import symbols_image_prep
 import numpy as np
@@ -67,16 +67,16 @@ _classify_symbols.counter = 0
 
 def _build_recon(recon, symbol_array):
 
-	node_data = function_config.generate_node_data(symbol_array)
-	function_config.add_nodes(recon, node_data)
+	node_data = recon_config.generate_node_data(symbol_array)
+	recon_config.add_nodes(recon, node_data)
 
-	link_data = function_config.generate_link_data(recon, symbol_array)
-	function_config.link_nodes(recon, link_data)
+	link_data = recon_config.generate_link_data(recon, symbol_array)
+	recon_config.link_nodes(recon, link_data)
 
 def _execute_function(recon, symbol_array):
 
-	function_config.set_activation(recon, symbol_array)
-	evaluated_function = recon.run(recon)
-	print evaluated_function
+	for symbol in symbol_array:
+		recon_config.set_activation(recon, 1)
+		recon_control.run(recon)
 
 
