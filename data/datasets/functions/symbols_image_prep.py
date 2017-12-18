@@ -22,7 +22,7 @@ import warnings
 
 def function_parser():
 
-	functions = os.path.abspath("data/datasets/functions/function_data2")
+	functions = os.path.abspath("data/datasets/functions/function_data")
 
 	symbols = os.path.abspath("data/datasets/functions/symbols")
 	if not os.path.exists(symbols):
