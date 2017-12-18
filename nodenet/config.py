@@ -14,7 +14,7 @@ def generate_node_data(network_dimensions):
 	for n in range(0, num_nodes)] for layer_index, num_nodes in enumerate(network_dimensions)]
 
 def add_nodes(nodenet, node_data):
-	nodenet.add_layers(node_factory(node_data))
+	nodenet.add_layers(node_factory(node_data, "nodenet"))
 
 def remove_nodes(nodenet, node_data):
 	node_dict = nodenet.node_dict
