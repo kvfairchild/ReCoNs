@@ -56,6 +56,7 @@ def set_activation(nodenet, image):
 
 # PRETRAINED NETWORK
 
+# option to save network after training
 def save_weights(nodenet, network_dimensions):
 	config_specs = os.path.join(os.getcwd(), "nodenet/config_specs")
 	if not os.path.exists(config_specs):
@@ -67,6 +68,7 @@ def save_weights(nodenet, network_dimensions):
 	with open(filepath, "wb") as file:
 		pickle.dump(weight_matrix, file)
 
+# initialize a pretrained network
 def initialize_net(nodenet, network_dimensions):
 
 	config_specs = os.path.join(os.getcwd(), "nodenet/config_specs")

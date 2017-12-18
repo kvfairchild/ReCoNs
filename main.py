@@ -9,14 +9,13 @@ import sys
 from data.process_data import *
 from data.datasets.math_ops import math_ops_data_prep
 from function_approximator import function_approximator
-from nodenet import config
-from nodenet import control
+from nodenet import config, control
 from nodenet.nodenet import Nodenet
 
 def build_nodenet(nodenet):
 
 	# enter nodes per layer
-	network_dimensions = [784, 60, 14]
+	network_dimensions = [784, 14]
 
 	node_data = config.generate_node_data(network_dimensions)
 	config.add_nodes(nodenet, node_data)

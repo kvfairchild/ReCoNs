@@ -10,10 +10,13 @@ from .nodenet import Nodenet
 
 def run(nodenet, target_output, function, image_index):
 	output = _step_function(nodenet) # softmax output
+	prediction = _get_symbol(output) # predicted symbol
 
-	_pretty_print(output, target_output, function, image_index)
-	
+	_pretty_print(prediction, target_output, function, image_index)
+
 	_zero_gates(nodenet)
+
+	return prediction
  
 def _step_function(nodenet):
 
@@ -47,11 +50,9 @@ def _link_function(nodenet):
 
 # HELPER FUNCTIONS
 
-def _pretty_print(output, target_output, function, image_index):
+def _pretty_print(prediction, target_output, function, image_index):
 	global error_count
 	error_count = 0 if image_index == 0 else error_count
-
-	prediction = _get_symbol(output)
 
 	if str(prediction) == str(target_output):
 		print "#", image_index+1, "prediction: ", prediction, " target: ", target_output, "HIT"
@@ -87,8 +88,8 @@ def _zero_gates(nodenet):
 			for link in node:
 				link.origin_gate.activation = 0
 
-def _get_symbol(prediction):
-	prediction = _one_hot_to_int(prediction) # integer output
+def _get_symbol(output):
+	prediction = _one_hot_to_int(output) # integer output
 
 	if prediction <=9:
 		return prediction

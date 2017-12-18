@@ -10,6 +10,14 @@ SLOT_TYPES = {
     "ret": [
         "ret",
         0
+    ],
+    "sub": [
+        "sub",
+        0
+    ],
+    "sur": [
+        "sur",
+        0
     ]
 }
 

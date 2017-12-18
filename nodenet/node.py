@@ -16,6 +16,10 @@ NODE_TYPES = {
     "concept": [
         [ "gen" ],
         [ "gen", "por", "ret", "sub", "sur", "cat", "exp", "sym", "ref" ]
+    ],
+    "recon": [
+        [ "gen", "por", "ret", "sub", "sur" ],
+        [ "gen", "por", "ret", "sub", "sur"]
     ]
 }
 
