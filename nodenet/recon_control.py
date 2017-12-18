@@ -29,11 +29,11 @@ def _step_function(recon):
             _net_function(recon)
             _link_function(recon)
 
+            _propagate_activation(recon)
+
             for node in recon.node_dict.values():
                 if node.activation > 0:
                     print node.name, node.activation
-
-            _propagate_activation(recon)
 
             _zero_nodes(recon)
             _zero_gates(recon)
