@@ -1,6 +1,6 @@
 # Function approximator
 
-** Takes images of handwritten algebra functions as input and outputs the numeric value of the evaluated function. ** 
+**Takes images of handwritten algebra functions as input and outputs the numeric value of the evaluated function.** 
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/data/datasets/functions/function_data/0+1*2+3.png?raw=true)
 
