@@ -10,9 +10,9 @@ import numpy as np
 
 from file_parsers import MNIST_fp, MNIST_micropsi_fp, math_ops_fp
 
-def parse_data(data_type, run_type):
+def parse_data(data_type, run_type, math_ops=False):
 	if data_type == "MNIST":
-		return MNIST_fp.read(run_type)
+		return MNIST_fp.read(run_type, math_ops)
 	elif data_type == "MNIST_micropsi":
 		return MNIST_micropsi_fp.read(run_type)
 	else:

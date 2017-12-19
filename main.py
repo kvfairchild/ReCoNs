@@ -8,7 +8,7 @@ from nodenet.nodenet import Nodenet
 def build_nodenet(nodenet):
 
 	# enter nodes per layer
-	network_dimensions = [784, 14]
+	network_dimensions = [784, 10]
 
 	node_data = config.generate_node_data(network_dimensions)
 	config.add_nodes(nodenet, node_data)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 	pretrain: if True, will run a saved net with the specified dimensions on test data
 	save_net: if True, will save a net (in config_specs) after it is finished running
 	"""
-	# classifier(nodenet, network_dimensions, "train")
+	classifier(nodenet, network_dimensions, "train")
 
 	""" FUNCTION APPROXIMATOR
 	function_approximator(nodenet, network_dimensions)
@@ -49,4 +49,4 @@ if __name__ == "__main__":
 	to build a Request Confirmation Network (ReCoN), which executes the function. The
 	final output is the numeric value of the evaluated function.
 	"""
-	function_approximator(nodenet, network_dimensions)
+	# function_approximator(nodenet, network_dimensions)
