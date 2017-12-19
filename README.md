@@ -2,15 +2,26 @@
 
 **Takes images of handwritten algebra functions as input and outputs the numeric value of the evaluated function.** 
 
+This is a showcase program for [Request Confirmation Networks (ReCoNs)](https://pdfs.semanticscholar.org/a7ac/e80b84c64329501a3a9906314c80c3614997.pdf), an experimental network architecture designed to model neural execution of sensorimotor scripts.
+
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/data/datasets/functions/function_data/0+1*2+3.png?raw=true)
 
-A function image is first parsed into images of its component digits and symbols, which are then prepped according to [MNIST preprocessing directives](http://yann.lecun.com/exdb/mnist/) and fed into an *n*-layer perceptron pretrained on a combination of MNIST and mathematical operators (+, -, ×, ÷) adapted from [this Kaggle handwritten math symbols dataset](https://www.kaggle.com/xainano/handwrittenmathsymbols).
+A function image is first parsed into images of its component digits and symbols. These subcomponent images are then prepped according to [MNIST preprocessing directives](http://yann.lecun.com/exdb/mnist/) and fed into an *n*-layer perceptron pretrained on a combination of MNIST and mathematical operators (+, -, ×, ÷) adapted from [this Kaggle handwritten math symbols dataset](https://www.kaggle.com/xainano/handwrittenmathsymbols).
 
-The perceptron returns the predicted values of each function's digits and symbols in an array for that function.  This array is used to build a [Request Confirmation Network (ReCoN)](https://pdfs.semanticscholar.org/a7ac/e80b84c64329501a3a9906314c80c3614997.pdf) that represents the function in its structure:
+The perceptron returns the predicted values for each function's digits and symbols in an array representing that function.  This array is used to build a ReCoN that renders the function in its structure:
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/ReCoN_structure_ex.png?raw=true)
 
-ReCoNs are an experimental network architecture designed to model neural execution of sensorimotor scripts.  
+Activation spreads through the ReCoN based on a hierarchical system of requests and confirmations.  Pairs of nodes are connected by a pair of "sub/sur" links, denoting a parent/child relationship, or a pair of "por/ret" links, denoting a predecessor/successor relationship.
+
+Parent nodes request confirmation from their child nodes via "sub" links, and receive in return a "wait" signal, followed by either confirmation or failure of the request, via "sur" links.  A successor node that requires confirmation from predecessor nodes before executing its own sequence will receive an "inhibit request" signal via "por" links until that confirmation is available, and will send back an "inhibit confirm" signal via "ret" links while its sequence executes. 
+
+At any time, ReCoN nodes can have one of the following states: inactive, requested, active, suppressed, waiting, true, confirmed, failed.
+
+The last unit in a sequence will validate a parent request by changing its state to "confirmed", or it will fail and change its state to "failed".  In this implementation, each sequence represents an operation in the function expressed by the ReCoN, and the last unit of each sequence represents either a digit or symbol operator.
+
+The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  For 0+1x2+3, this evaluates to 5.  
+
 
 ## Run
 
