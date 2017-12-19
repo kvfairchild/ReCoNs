@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """ 
-Takes in a folder of images depicting math operation symbols derived from
-https://www.kaggle.com/xainano/handwrittenmathsymbols and returns two sets 
-of numpy arrays: testing and training data and their respective one hot 
+Takes in two folders (train/test) of images depicting math operation symbols 
+derived from https://www.kaggle.com/xainano/handwrittenmathsymbols and generates 
+two sets of numpy arrays: testing and training data and their respective one hot 
 encoded labels. Labels are based on filename start character.
 """
 
@@ -15,6 +15,8 @@ import os
 images_folder = os.path.abspath("data/datasets/math_ops")
 train_images = os.path.join(images_folder, "ops_train_files")
 test_images = os.path.join(images_folder, "ops_test_files")
+
+# created files
 train_data = os.path.join(images_folder, "ops_train_data")
 test_data = os.path.join(images_folder, "ops_test_data")
 train_labels = os.path.join(images_folder, "ops_train_labels")

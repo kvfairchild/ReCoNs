@@ -1,16 +1,16 @@
 import numpy as np
 import os
 
-def read(dataset = "training", path = os.path.abspath("data/datasets/math_ops")):
+def read(dataset = "train", path = os.path.abspath("data/datasets/math_ops")):
 
-    if dataset is "training":
+    if dataset is "train":
         image_file = os.path.join(path, "ops_train_data.npy")
         label_file = os.path.join(path, "ops_train_labels.npy")
-    elif dataset is "testing":
+    elif dataset is "test":
         image_file = os.path.join(path, "ops_test_data.npy")
         label_file = os.path.join(path, "ops_test_labels.npy")
     else:
-        raise ValueError, "dataset must be 'testing' or 'training'"
+        raise ValueError, "dataset must be 'test' or 'train'"
 
     return {
         "images": _extract_images(image_file),

@@ -25,8 +25,8 @@ Use the following command to build and run a function approximator:
 Available pretrained classifiers:
 
 * 784,240,60,14 *()*
-* 784,60,14 *(93.29% accuracy)*
-* 784,14 *(89.3% accuracy)*
+* 784,60,14 *(~93.3% accuracy)*
+* 784,14 *(~89.3% accuracy)*
 
 The default is set to a 3-layer classifier with 784 input nodes, 60 hidden nodes, and 14 output nodes representing digits 0-9 and algebra operators +, -, ×, ÷.
 
@@ -39,6 +39,12 @@ Uncomment the following code block in nodenet/control.py to create a folder of f
 	# # print images of final learned digits
 	# if run_type == "test" and image_index == 0:
 	# 	_create_images(nodenet)
+
+## Dataset Creation
+
+In `data/datasets/math_ops` is a file named `math_ops_data_prep.py` that takes in two (train/test) folders of images depicting handwritten math operation symbols derived from [this Kaggle handwritten math symbols dataset](https://www.kaggle.com/xainano/handwrittenmathsymbols) and generates two sets of numpy arrays: testing and training data and their respective one hot encoded labels. Labels are based on filename start character. 
+
+In `data/datasets/functions` is a file named `symbols_image_prep.py` that takes in a folder of images depicting handwritten algebra functions and splits them into individual images of their component symbols. Images are prepared [MNIST-style](http://yann.lecun.com/exdb/mnist/): 20x20 symbols centered on a 28x28 canvas.
 
 ## Unit Test
 #### python -m unittest discover -v

@@ -9,16 +9,16 @@ def _read32(bytestream):
     dt = np.dtype(np.uint32).newbyteorder('>')
     return np.frombuffer(bytestream.read(4), dtype=dt)[0]
 
-def read(dataset = "training", path = os.path.abspath("data/datasets/MNIST")):
+def read(dataset = "train", path = os.path.abspath("data/datasets/MNIST")):
 
-    if dataset is "training":
+    if dataset is "train":
         image_file = os.path.join(path, 'train-images.idx3-ubyte')
         label_file = os.path.join(path, 'train-labels.idx1-ubyte')
-    elif dataset is "testing":
+    elif dataset is "test":
         image_file = os.path.join(path, 't10k-images-idx3-ubyte')
         label_file = os.path.join(path, 't10k-labels.idx1-ubyte')
     else:
-        raise ValueError, "dataset must be 'testing' or 'training'"
+        raise ValueError, "dataset must be 'test' or 'train'"
 
     return {
         "images": _extract_images(image_file),
