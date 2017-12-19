@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 
-""" 
-Uses pretrained perceptron to identify the individual symbols in handwritten 
-algebra functions, then feeds them to Request Confirmation Networks (ReCoNs),
-which execute the functions as scripts and return the numeric value as output.
+""" FUNCTION APPROXIMATOR
+
+Takes images of handwritten algebra functions as input and outputs the numeric value 
+of the evaluated function.
+
+Parses functions into component symbols, then feeds them into a pretrained perceptron
+classifier, which outputs a prediction array for each function.  This array is used 
+to build a Request Confirmation Network (ReCoN), which executes the function. The
+final output is the numeric value of the evaluated function.
 """
 
 import cv2
