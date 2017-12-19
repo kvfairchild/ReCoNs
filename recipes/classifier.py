@@ -47,24 +47,3 @@ def _run_classifier(nodenet, run_type, *data):
 		control.run(nodenet, labels[i], i, run_type)
 
 	print "execution time: ", str(timedelta(seconds=(time.time()-start_time)))
-
-
-	# # TRAIN
-	# MNIST_data = parse_data("MNIST", "training")
-	# math_ops_data = parse_data("math_ops", "training")
-	# data = (MNIST_data, math_ops_data)
-	# run_nodenet(nodenet, "train", *data)
-
-
-	# # TEST
-	# MNIST_data = parse_data("MNIST", "testing")
-	# math_ops_data = parse_data("math_ops", "testing")
-	# data = (MNIST_data, math_ops_data)
-	# run_nodenet(nodenet, "test", *data)
-
-	# # PRETRAINED NET
-	# MNIST_data = parse_data("MNIST", "testing")
-	# math_ops_data = parse_data("math_ops", "testing")
-	# data = (MNIST_data, math_ops_data)
-	# config.initialize_net(nodenet, network_dimensions)
-	# run_nodenet(nodenet, "test", *data)
