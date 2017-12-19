@@ -24,7 +24,7 @@ Use the following command to build and run a function approximator:
 
 Available pretrained classifiers:
 
-* 784,240,60,14 *()*
+* 784,240,60,14 *(~94.75% accuracy)*
 * 784,60,14 *(~93.3% accuracy)*
 * 784,14 *(~89.3% accuracy)*
 
