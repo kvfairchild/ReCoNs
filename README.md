@@ -24,6 +24,7 @@ The final output of the program is the numeric value of the function, which is c
 
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/images/learned_images.png?raw=true)
+\
 *Learned images derived from the weights of a trained 2-layer classifier.*
 
 ## Run
