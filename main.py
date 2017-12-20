@@ -8,7 +8,7 @@ from nodenet.nodenet import Nodenet
 def build_nodenet(nodenet):
 
 	# enter nodes per layer
-	network_dimensions = [784, 14]
+	network_dimensions = [784, 60, 14]
 
 	node_data = config.generate_node_data(network_dimensions)
 	config.add_nodes(nodenet, node_data)
