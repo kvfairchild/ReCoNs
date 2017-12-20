@@ -36,7 +36,7 @@ if __name__ == "__main__":
 	pretrain: if True, will run a saved net with the specified dimensions on test data
 	save_net: if True, will save a net (in config_specs) after it is finished running
 	"""
-	# classifier(nodenet, network_dimensions, "train")
+	# classifier(nodenet, network_dimensions, "test", pretrain=True)
 
 	""" FUNCTION APPROXIMATOR
 	function_approximator(nodenet, network_dimensions)

@@ -10,18 +10,21 @@ A function image is first parsed into images of its component digits and symbols
 
 The perceptron returns the predicted values for each function's digits and symbols in an array representing that function.  This array is used to build a ReCoN that renders the function in its structure:
 
-![Image](https://github.com/kvgallagher/nodenet/blob/master/ReCoN_structure_ex.png?raw=true)
+![Image](https://github.com/kvgallagher/nodenet/blob/master/images/ReCoN_structure_ex.png?raw=true)
 
-Activation spreads through the ReCoN based on a hierarchical system of requests and confirmations.  Pairs of nodes are connected by a pair of "sub/sur" links, denoting a parent/child relationship, or a pair of "por/ret" links, denoting a predecessor/successor relationship.
+Activation spreads through the ReCoN based on a hierarchical system of requests and confirmations.  Node pairs are connected by a pair of "sub/sur" links, denoting a parent/child relationship, or a pair of "por/ret" links, denoting a predecessor/successor relationship.
 
-Parent nodes request confirmation from their child nodes via "sub" links, and receive in return a "wait" signal, followed by either confirmation or failure of the request, via "sur" links.  A successor node that requires confirmation from predecessor nodes before executing its own sequence will receive an "inhibit request" signal via "por" links until that confirmation is available, and will send back an "inhibit confirm" signal via "ret" links while its sequence executes. 
+Parent nodes request confirmation from their child nodes via "sub" links, and receive in return a "wait" signal, followed by either confirmation or failure of the request via "sur" links.  A successor node that requires confirmation from predecessor nodes before executing its own sequence will receive an "inhibit request" signal via "por" links until that confirmation is available, and will send back an "inhibit confirm" signal via "ret" links while its sequence executes. 
 
 At any time, ReCoN nodes can have one of the following states: inactive, requested, active, suppressed, waiting, true, confirmed, failed.
 
 The last unit in a sequence will validate a parent request by changing its state to "confirmed", or it will fail and change its state to "failed".  In this implementation, each sequence represents an operation in the function expressed by the ReCoN, and the last unit of each sequence represents either a digit or symbol operator.
 
-The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  For 0+1x2+3, this evaluates to 5.  
+The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  0+1×2+3 evaluates to 5.  
 
+
+![Image](https://github.com/kvgallagher/nodenet/blob/master/images/learned_images.png?raw=true)
+Learned images derived from the weights of a trained 2-layer classifier.
 
 ## Run
 
