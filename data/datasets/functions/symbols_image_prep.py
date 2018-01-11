@@ -6,9 +6,6 @@ individual images of their component symbols. Images are prepared MNIST-style:
 20x20 digits centered on a 28x28 canvas.
 """
 
-import matplotlib.image as img
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
 import ntpath
 import os
@@ -90,7 +87,6 @@ def _split_function(filename, filepath, symbols):
 		cropped_filename = str(index) + " | " + filename[index] + ".png"
 		cropped_filepath = os.path.join(function_folder, cropped_filename)
 		io.imsave(cropped_filepath, cropped_image)
-		plt.clf()
 
 def _trim_whitespace(filepath):
 	image = Image.open(filepath)

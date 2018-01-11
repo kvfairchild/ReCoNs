@@ -26,15 +26,16 @@ def function_approximator(nodenet, network_dimensions):
 
 	symbols = os.path.abspath("data/datasets/functions/symbols")
 
-	# initialize pretrained net to classify symbols
+	# initialize pretrained classifier net
 	config.initialize_net(nodenet, network_dimensions)
 
+	# classify all symbol images in function folder
 	for s, subfolder in enumerate(os.listdir(symbols)):
 		function = subfolder
 		subfolder = os.path.normpath(os.path.join(symbols, subfolder))
-		if s == 2:
+		if s == 3:
 			if os.path.isdir(subfolder):
-				print "Function: ", function
+				print "\nFunction: ", function
 				symbol_array = _classify_symbols(nodenet, subfolder)
 
 				# build ReCoN to execute function
@@ -50,7 +51,6 @@ def _classify_symbols(nodenet, subfolder):
 	for filename in os.listdir(subfolder):
 		filepath = os.path.join(subfolder, filename)
 
-		image_index = _classify_symbols.counter
 		target_output = filename[-5:-4] # get label from filename (@ len(filename)-5)
 
 		image = np.array(Image.open(filepath))
@@ -61,14 +61,10 @@ def _classify_symbols(nodenet, subfolder):
 		inverse_image = np.invert(cvuint8)
 
 		config.set_activation(nodenet, inverse_image)
-		symbol = function_control.run(nodenet, target_output, subfolder, image_index)
+		symbol = function_control.run(nodenet, target_output, subfolder)
 		symbol_array.append(symbol)
 
-		_classify_symbols.counter += 1
-
 	return symbol_array
-
-_classify_symbols.counter = 0
 
 def _build_recon(recon, symbol_array):
 

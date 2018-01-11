@@ -1,20 +1,26 @@
+#!/usr/bin/env python
+
 from __future__ import division
 
 from request_confirmation import request_confirmation
 
 def run(recon, symbol_array):
 
-    i = 0
+    _input_symbols(recon, symbol_array)
+    _activate_root_node(recon, .8)
+    _step_function(recon)
 
-    while i < len(symbol_array):
+def _input_symbols(recon, symbol_array):
 
-        _activate_recon(recon, .8)
-        _step_function(recon)
+    for node_index, node in enumerate(recon.layers[len(recon.layers)-1]):
 
-        i += 1
+        print node.name, symbol_array[node_index]
+
+        slot = node.get_slot("sur")
+        slot.activation = symbol_array[node_index]
 
 # initialize ReCoN via root node "sub" activation
-def _activate_recon(recon, activation):
+def _activate_root_node(recon, activation):
 
     for node in recon.layers[0]:
 

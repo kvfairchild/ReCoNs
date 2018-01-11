@@ -19,7 +19,7 @@ NODE_TYPES = {
     ],
     "recon": [
         [ "gen", "por", "ret", "sub", "sur" ],
-        [ "gen", "por", "ret", "sub", "sur"]
+        [ "gen", "por", "ret", "sub", "sur" ]
     ]
 }
 

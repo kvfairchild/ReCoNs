@@ -1,4 +1,7 @@
-"""ReCoN nodes are state machines that use the node activation for determining their behavior.
+""" ReCoN node behavior adapted from MicroPsi2 
+https://github.com/joschabach/micropsi2/blob/74a2642d20da9da1d64acc5e4c11aeabee192a27/micropsi_core/nodenet/nodefunctions.py
+
+ReCoN nodes are state machines that use the node activation for determining their behavior.
 
 They form hierarchical scripts that are started via sub-activating their top-node. If the sur-activation
 is turned off, the script stops executing.
@@ -24,13 +27,13 @@ The distinction between "ready" and "waiting", and "requesting and "pending" is 
 time until neighboring nodes have had time to make themselves heard.
 
 Currently, the node states correspond to the following activation levels:
-< 0     failed (will stick until requesting ends)
+< 0     failed (will remain until requesting ends)
 < 0.01  inactive (will change to prepared when requested)
 < 0.3   preparing (inhibits neighbors  and changes to suppressed)
 < 0.5   suppressed (inhibits neighbors and goes to requesting when no longer inhibited)
 < 0.7   requesting (starts requesting and changes to pending)
 < 1     pending (keeps requesting, will either change to confirmed or failed)
->=1     confirmed (will stick until requesting ends)
+>=1     confirmed (will remain until requesting ends)
 """
 
 def request_confirmation(recon):

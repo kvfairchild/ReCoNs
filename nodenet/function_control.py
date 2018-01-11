@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 from __future__ import division
 from itertools import groupby
 from math import sqrt
@@ -8,11 +11,11 @@ import os
 
 from .nodenet import Nodenet
 
-def run(nodenet, target_output, function, image_index):
+def run(nodenet, target_output, function):
 	output = _step_function(nodenet) # softmax output
 	prediction = _get_symbol(output) # predicted symbol
 
-	_pretty_print(prediction, target_output, function, image_index)
+	_pretty_print(prediction, target_output, function)
 
 	_zero_gates(nodenet)
 
@@ -50,18 +53,12 @@ def _link_function(nodenet):
 
 # HELPER FUNCTIONS
 
-def _pretty_print(prediction, target_output, function, image_index):
-	global error_count
-	error_count = 0 if image_index == 0 else error_count
+def _pretty_print(prediction, target_output, function):
 
 	if str(prediction) == str(target_output):
-		print "#", image_index+1, "prediction: ", prediction, " target: ", target_output, "HIT"
+		print target_output, ". ", "prediction: ", prediction, "✓"
 	else:
-		print "#", image_index+1, "prediction: ", prediction, " target: ", target_output
-		error_count += 1
-	
-	success_rate = "{:.2f}".format((((image_index+1) - error_count) / (image_index+1)) * 100)
-	print "success rate: ", success_rate, "%"
+		print target_output, ". ", "prediction: ", prediction, "⌧"
 
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight
