@@ -1,23 +1,35 @@
-#!/usr/bin/env python
-
 from __future__ import division
 
 from request_confirmation import request_confirmation
 
 def run(recon, symbol_array):
 
-    _input_symbols(recon, symbol_array)
+    subops = _prep_subops(symbol_array)
+    _input_symbols(recon, subops)
     _activate_root_node(recon, .8)
     _step_function(recon)
 
-def _input_symbols(recon, symbol_array):
+def _input_symbols(recon, subops):
+    last_layer = recon.layers[len(recon.layers)-1]
 
-    for node_index, node in enumerate(recon.layers[len(recon.layers)-1]):
+    for node_index, node in enumerate(last_layer[0:3]):
+        node.value = subops[0][node_index]
+        
+    i = 1 # subops index
+    j = 0 # symbols index
 
-        print node.name, symbol_array[node_index]
+    for node_index, node in enumerate(last_layer[3:len(last_layer)]):
+        if node_index % 3 == 0: # leave 0-indexed digit value empty for result of preceding operation
+            j += 1
+        elif node_index == j:
+            node.value = subops[i][0]
+        elif node_index == j+1:
+            node.value = subops[i][1]
+            i += 1
+            j += 2
 
-        slot = node.get_slot("sur")
-        slot.activation = symbol_array[node_index]
+        # slot = node.get_slot("sur")
+        # slot.activation = symbol_array[node_index]
 
 # initialize ReCoN via root node "sub" activation
 def _activate_root_node(recon, activation):
@@ -68,6 +80,20 @@ def _link_function(nodenet):
 
 
 # HELPER FUNCTIONS
+
+def _prep_subops(symbol_array):
+    ops = []
+    
+    # split symbol array into suboperations
+    ops.append(symbol_array[0:3])
+    for i in range(3,len(symbol_array),2):
+        ops.append(symbol_array[i:i+2])
+    
+    # reverse order of symbols (e.g. 1,+,2 --> 1,2,+)
+    for op in ops:
+        op[-2:] = reversed(op[-2:])
+
+    return ops
 
 def _send_activation_to_target_slot(link):
     activation = link.origin_gate.activation * link.weight

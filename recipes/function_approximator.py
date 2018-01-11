@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """ FUNCTION APPROXIMATOR
 
 Takes images of handwritten algebra functions as input and outputs the numeric value 

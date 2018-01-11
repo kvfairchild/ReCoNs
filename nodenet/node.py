@@ -1,6 +1,8 @@
 from uuid import uuid4
-from .slot import slot_factory
+
 from .gate import gate_factory
+from .slot import slot_factory
+from .stack import Stack
 
 NODE_TYPES = {
     "register": [
@@ -23,8 +25,8 @@ NODE_TYPES = {
     ]
 }
 
+# return a list of nodes, generated from a list of node names and types
 def node_factory(node_data, net_type):
-# return a list of nodes, generated from node types based on a list of names
     if len(node_data) > 0:
         layers = []
         for layer_index, layer in enumerate(node_data):
@@ -74,9 +76,9 @@ class Node:
         for gate in self.gate_vector:
             if name == gate.name:
                 return gate
-                
+
+    # calls all gate functions, passes value from slot            
     def _default_node_function(self, activation):
-    # calls all gate functions, passes value from slot
         for gate in self.gate_vector:
             gate.gate_function(activation)
 
@@ -84,6 +86,14 @@ class ActionNode(Node):
     def __init__(self, *args, **kwargs):
         Node.__init__(self, *args, **kwargs)
         self.value = kwargs.pop("value") if "value" in kwargs else None
+
+    def _get_value_from_stack(self):
+        if self.activation > 0 and self.value is None:
+            self.value = Stack.pop()
+
+    def _push_value_to_stack(self):
+        if self.activation > 0 and self.value is not None:
+            Stack.push(self.value)
 
 
 # NODE FACTORY HELPERS

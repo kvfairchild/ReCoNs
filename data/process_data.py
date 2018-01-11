@@ -1,6 +1,3 @@
-
-#!/usr/bin/env python
-
 """ 
 Parses and unpacks datasets for feeding into network. 
 join_sets() scrambles two separate datasets into a single combined set.

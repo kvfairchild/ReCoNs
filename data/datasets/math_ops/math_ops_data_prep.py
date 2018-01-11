@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """ 
 Takes in two folders (train/test) of images depicting math operation symbols 
 derived from https://www.kaggle.com/xainano/handwrittenmathsymbols and generates 
