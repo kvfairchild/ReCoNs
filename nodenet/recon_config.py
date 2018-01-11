@@ -15,15 +15,23 @@ def generate_node_data(symbol_array):
 
 	node_list = []
 
-	for layer_index in range(0, len(symbol_array)):
-		if layer_index % 2 == 0 and layer_index != len(symbol_array)-1:
+	# create recon root node
+	node_list.append([["root_node", "recon"]])
+
+	for layer in range(0, len(symbol_array)):
+		layer_index = layer + 1
+
+		# create operations-level layers
+		if layer % 2 == 0 and layer != len(symbol_array)-1:
 			node_list.append([["layer"+str(layer_index)+"ops_node", "recon"]])
-		elif layer_index % 2 != 0:
+		# create digit-level layers
+		elif layer % 2 != 0:
 			node_list.append([["layer"+str(layer_index)+"node"+str(n), "recon"]
 			for n in range(0, 3)])
+		# create final "leaf node" layer
 		else:
 			node_list.append([["layer"+str(layer_index)+"node"+str(n), "recon"]
-			for n in range(0, int((num_ops*2)+num_ops))])
+			for n in range(0, int((num_ops*2)+num_ops+1))])
 
 	return node_list
 
@@ -43,35 +51,41 @@ def generate_link_data(recon, symbol_array):
 	link_list = []
 
 	for layer_index, layer in enumerate(recon.layers):
-		if layer_index % 2 == 0 and layer_index != len(symbol_array)-1:
+
+		# create sub/sur links between root node and first layer ops node
+		# create sub/sur links between ops nodes and digit nodes
+		if layer_index == 0 or (layer_index % 2 != 0 and layer_index != len(symbol_array)):
 			sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
 			for origin_node in layer for target_node in recon.layers[layer_index+1]]
 			sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
 			for origin_node in layer for target_node in recon.layers[layer_index+1]]
 			link_list.append([sub_links, sur_links])
-		elif layer_index % 2 != 0 and layer_index != len(symbol_array)-2:
-			sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
-			for origin_index, origin_node in enumerate(layer) 
-			for target_node in recon.layers[layer_index+1] if origin_index == 0]
-			sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
-			for origin_index, origin_node in enumerate(layer) 
-			for target_node in recon.layers[layer_index+1] if origin_index == 0]
+
+		# create por/ret links between same-layer digit nodes
+		elif layer_index % 2 == 0:
 			por_links = [{"origin": [origin_node.name, "por"], "target": [target_node.name, "por"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
 			ret_links = [{"origin": [origin_node.name, "ret"], "target": [target_node.name, "ret"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
-			link_list.append([sub_links, sur_links, por_links, ret_links])
-		elif layer_index == len(symbol_array)-2:
-			por_links = [{"origin": [origin_node.name, "por"], "target": [target_node.name, "por"]} 
-			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
-			if origin_index + 1 == target_index]
-			ret_links = [{"origin": [origin_node.name, "ret"], "target": [target_node.name, "ret"]} 
-			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
-			if origin_index + 1 == target_index]
-			link_list.append([por_links, ret_links])
-		else: # last layer "leaf-node" links
+
+			if layer_index == len(symbol_array)-1:
+				link_list.append([por_links, ret_links])
+
+			# if not last digit layer, create sub/sur links between 0-index digit node and next layer ops node
+			else:
+				sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
+				for origin_index, origin_node in enumerate(layer) 
+				for target_node in recon.layers[layer_index+1] if origin_index == 0]
+				sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
+				for origin_index, origin_node in enumerate(layer) 
+				for target_node in recon.layers[layer_index+1] if origin_index == 0]
+
+				link_list.append([sub_links, sur_links, por_links, ret_links])
+
+		# create links to last layer nodes
+		else: 
 			sub_links = []
 			sur_links = []
 
@@ -84,8 +98,8 @@ def generate_link_data(recon, symbol_array):
 						if target_index == origin_index + j:
 							sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
 							sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
-				i -= 2 # only odd-indexed layers
-				j += len(recon.layers[i])
+				i -= 2 # only even-indexed layers
+				j += len(recon.layers[i+2])
 
 			link_list.append([sub_links, sur_links])
 

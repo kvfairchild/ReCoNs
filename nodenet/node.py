@@ -36,7 +36,11 @@ def node_factory(node_data, net_type):
                     node = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
                     layers.append(node)
             elif net_type == "recon":
+                if layer_index < len(node_data)-1:
                     node = [Node(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    layers.append(node)
+                else:
+                    node = [ActionNode(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
                     layers.append(node)
             else:
                 raise ValueError("net type not recognized")
@@ -75,6 +79,11 @@ class Node:
     # calls all gate functions, passes value from slot
         for gate in self.gate_vector:
             gate.gate_function(activation)
+
+class ActionNode(Node):
+    def __init__(self, *args, **kwargs):
+        Node.__init__(self, *args, **kwargs)
+        self.value = kwargs.pop("value") if "value" in kwargs else None
 
 
 # NODE FACTORY HELPERS
