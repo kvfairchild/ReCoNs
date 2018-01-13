@@ -87,13 +87,13 @@ class ActionNode(Node):
         Node.__init__(self, *args, **kwargs)
         self.value = kwargs.pop("value") if "value" in kwargs else None
 
-    def _get_value_from_stack(self):
-        if self.activation > 0 and self.value is None:
-            self.value = Stack.pop()
-
-    def _push_value_to_stack(self):
+    def push_to_stack(self):
         if self.activation > 0 and self.value is not None:
-            Stack.push(self.value)
+            Stack.items.append(self.value)
+
+    def pull_from_stack(self):
+        if self.activation > 0 and self.value is None:
+            self.value = Stack.items.pop()
 
 
 # NODE FACTORY HELPERS

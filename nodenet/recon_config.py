@@ -9,27 +9,29 @@ from .nodenet import Nodenet
 # NODES
 
 def generate_node_data(symbol_array):
-	num_ops = (len(symbol_array)-1)/2 # number of operations in function
 
 	node_list = []
 
 	# create recon root node
 	node_list.append([["root_node", "recon"]])
 
-	for layer in range(0, len(symbol_array)):
-		layer_index = layer + 1
+	for layer_index in range(1, len(symbol_array)+1):
 
 		# create operations-level layers
-		if layer % 2 == 0 and layer != len(symbol_array)-1:
-			node_list.append([["layer"+str(layer_index)+"ops_node", "recon"]])
+		if layer_index % 2 != 0 and layer_index != len(symbol_array):
+			if layer_index == 1:
+				node_list.append([["layer"+str(layer_index)+"ops_node"+str(n), "recon"]
+					for n in range(0, 2)])
+			else:
+				node_list.append([["layer"+str(layer_index)+"ops_node", "recon"]])
 		# create digit-level layers
-		elif layer % 2 != 0:
+		elif layer_index % 2 == 0:
 			node_list.append([["layer"+str(layer_index)+"node"+str(n), "recon"]
-			for n in range(0, 3)])
-		# create final "leaf node" layer
+				for n in range(0, 3)])
+		# create last layer
 		else:
 			node_list.append([["layer"+str(layer_index)+"node"+str(n), "recon"]
-			for n in range(0, int((num_ops*2)+num_ops+1))])
+			for n in range(0, len(symbol_array)+1)])
 
 	return node_list
 
@@ -53,14 +55,19 @@ def generate_link_data(recon, symbol_array):
 		# create sub/sur links between root node and first layer ops node
 		# create sub/sur links between ops nodes and digit nodes
 		if layer_index == 0 or (layer_index % 2 != 0 and layer_index != len(symbol_array)):
+
 			sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
-			for origin_node in layer for target_node in recon.layers[layer_index+1]]
+			for origin_index, origin_node in enumerate(layer) 
+			for target_node in recon.layers[layer_index+1] if origin_index == 0]
 			sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
-			for origin_node in layer for target_node in recon.layers[layer_index+1]]
+			for origin_index, origin_node in enumerate(layer)
+			for target_node in recon.layers[layer_index+1] if origin_index == 0]
 			link_list.append([sub_links, sur_links])
 
+		# create por/ret links between first layer ops nodes
 		# create por/ret links between same-layer digit nodes
-		elif layer_index % 2 == 0:
+		elif layer_index == 1 or (layer_index % 2 == 0 and layer_index != 0):
+			
 			por_links = [{"origin": [origin_node.name, "por"], "target": [target_node.name, "por"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
@@ -87,17 +94,25 @@ def generate_link_data(recon, symbol_array):
 			sub_links = []
 			sur_links = []
 
-			i = layer_index-1
-			j = 0
+			i = layer_index-1 # layer pointer
+			j = 0 # symbol pointer
+
 			while j < len(layer):
-				target_layer = recon.layers[i]
+				origin_layer = recon.layers[i]
 				for target_index, target_node in enumerate(layer):
-					for origin_index, origin_node in enumerate(target_layer):
+					for origin_index, origin_node in enumerate(origin_layer):
 						if target_index == origin_index + j:
-							sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
-							sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
-				i -= 2 # only even-indexed layers
-				j += len(recon.layers[i+2])
+							if j == 0:
+								sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
+								sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
+							elif origin_index != 0:
+								sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
+								sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
+				if i != 2:			
+					i -= 2 # move layer pointer to even-indexed (digit) layers only
+				else:
+					i -= 1 # move layer pointer to "equals" node on 1st ops layer
+				j += 2 # move symbol pointer one space for operation and one space for digit
 
 			link_list.append([sub_links, sur_links])
 

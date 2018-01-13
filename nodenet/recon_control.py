@@ -1,35 +1,22 @@
 from __future__ import division
+from itertools import chain
 
 from request_confirmation import request_confirmation
 
+
 def run(recon, symbol_array):
 
-    subops = _prep_subops(symbol_array)
-    _input_symbols(recon, subops)
+    ops = _prep_data(symbol_array)
+    _input_symbols(recon, ops)
     _activate_root_node(recon, .8)
     _step_function(recon)
 
-def _input_symbols(recon, subops):
+def _input_symbols(recon, ops):
     last_layer = recon.layers[len(recon.layers)-1]
 
-    for node_index, node in enumerate(last_layer[0:3]):
-        node.value = subops[0][node_index]
-        
-    i = 1 # subops index
-    j = 0 # symbols index
-
-    for node_index, node in enumerate(last_layer[3:len(last_layer)]):
-        if node_index % 3 == 0: # leave 0-indexed digit value empty for result of preceding operation
-            j += 1
-        elif node_index == j:
-            node.value = subops[i][0]
-        elif node_index == j+1:
-            node.value = subops[i][1]
-            i += 1
-            j += 2
-
-        # slot = node.get_slot("sur")
-        # slot.activation = symbol_array[node_index]
+    for node_index, node in enumerate(last_layer):
+        if node_index != len(last_layer)-1:
+            node.value = ops[node_index]
 
 # initialize ReCoN via root node "sub" activation
 def _activate_root_node(recon, activation):
@@ -40,6 +27,7 @@ def _activate_root_node(recon, activation):
         slot.activation = activation
 
 def _step_function(recon):
+    last_layer = recon.layers[len(recon.layers)-1]
 
     while any(slot.activation > 0 for node in recon.node_dict.values() for slot in node.slot_vector):
 
@@ -50,9 +38,16 @@ def _step_function(recon):
 
             request_confirmation(recon)
 
-            for node in recon.node_dict.values():
-                if node.activation > 0:
-                    print node.name, node.activation
+            if layer == last_layer:
+                for node in layer:
+                    node.push_to_stack()
+                    node.pop_from_stack()
+
+            for node in recon.layers[len(recon.layers)-1]:
+                print node.name, node.activation, node.value
+            # for node in recon.node_dict.values():
+            #     if node.activation > 0:
+            #         print node.name, node.activation
 
             _zero_nodes(recon)
             _zero_gates(recon)
@@ -81,7 +76,7 @@ def _link_function(nodenet):
 
 # HELPER FUNCTIONS
 
-def _prep_subops(symbol_array):
+def _prep_data(symbol_array):
     ops = []
     
     # split symbol array into suboperations
@@ -92,6 +87,9 @@ def _prep_subops(symbol_array):
     # reverse order of symbols (e.g. 1,+,2 --> 1,2,+)
     for op in ops:
         op[-2:] = reversed(op[-2:])
+
+    # join sublists of now reversed operations into one list
+    ops = list(chain.from_iterable(ops))
 
     return ops
 
