@@ -53,8 +53,8 @@ def request_confirmation(recon):
         node.activation = (
         node.activation if node.activation < -0.01 else  # failed -> failed
         0.2 if node.activation < 0.01 else  # (already tested that sub is positive): inactive -> preparing
-        0.4 if node.activation < 0.5 and node.get_slot("por").activation < 0 else  # preparing -> supressed
-        0.6 if node.activation < 0.5 else  # preparing/supressed -> requesting
+        0.4 if node.activation < 0.5 and node.get_slot("por").activation < 0 else  # preparing -> suppressed
+        0.6 if node.activation < 0.5 else  # preparing/suppressed -> requesting
         0.8 if node.activation < 0.7 else  # requesting -> pending
         1.0 if node.get_slot("sur").activation >= 1 else  # pending -> confirmed
         -1. if node.get_slot("sur").activation <= 0 else  # pending -> failed

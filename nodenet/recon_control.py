@@ -8,7 +8,7 @@ def run(recon, symbol_array):
     ops = _prep_data(symbol_array)
 
     _input_symbols(recon, ops)
-    _activate_root_node(recon, .6)
+    _activate_root_node(recon, .4)
     _step_function(recon)
 
 def _input_symbols(recon, ops):
@@ -31,7 +31,7 @@ def _step_function(recon):
     stack = Stack()
     eval_node = LAST_LAYER[len(LAST_LAYER)-1]
 
-    while any(slot.activation > 0 for node in recon.node_dict.values() for slot in node.slot_vector):
+    while node.activation < 1 for node in recon.layers[0]:
 
         for layer in recon.layers:
 
