@@ -59,7 +59,7 @@ def generate_link_data(recon, symbol_array):
 			sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
 			for origin_index, origin_node in enumerate(layer) 
 			for target_node in recon.layers[layer_index+1] if origin_index == 0]
-			sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
+			sur_links = [{"origin": [target_node.name, "sur"], "target": [origin_node.name, "sur"]} 
 			for origin_index, origin_node in enumerate(layer)
 			for target_node in recon.layers[layer_index+1] if origin_index == 0]
 			link_list.append([sub_links, sur_links])
@@ -71,7 +71,7 @@ def generate_link_data(recon, symbol_array):
 			por_links = [{"origin": [origin_node.name, "por"], "target": [target_node.name, "por"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
-			ret_links = [{"origin": [origin_node.name, "ret"], "target": [target_node.name, "ret"]} 
+			ret_links = [{"origin": [target_node.name, "ret"], "target": [origin_node.name, "ret"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
 
@@ -83,7 +83,7 @@ def generate_link_data(recon, symbol_array):
 				sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
 				for origin_index, origin_node in enumerate(layer) 
 				for target_node in recon.layers[layer_index+1] if origin_index == 0]
-				sur_links = [{"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]} 
+				sur_links = [{"origin": [target_node.name, "sur"], "target": [origin_node.name, "sur"]} 
 				for origin_index, origin_node in enumerate(layer) 
 				for target_node in recon.layers[layer_index+1] if origin_index == 0]
 
@@ -104,10 +104,10 @@ def generate_link_data(recon, symbol_array):
 						if target_index == origin_index + j:
 							if j == 0:
 								sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
-								sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
+								sur_links.append({"origin": [target_node.name, "sur"], "target": [origin_node.name, "sur"]})
 							elif origin_index != 0:
 								sub_links.append({"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]})
-								sur_links.append({"origin": [origin_node.name, "sur"], "target": [target_node.name, "sur"]})
+								sur_links.append({"origin": [target_node.name, "sur"], "target": [origin_node.name, "sur"]})
 				if i != 2:			
 					i -= 2 # move layer pointer to even-indexed (digit) layers only
 				else:

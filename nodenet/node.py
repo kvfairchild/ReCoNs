@@ -2,7 +2,6 @@ from uuid import uuid4
 
 from .gate import gate_factory
 from .slot import slot_factory
-from .stack import Stack
 
 NODE_TYPES = {
     "register": [
@@ -39,10 +38,10 @@ def node_factory(node_data, net_type):
                     layers.append(node)
             elif net_type == "recon":
                 if layer_index < len(node_data)-1:
-                    node = [Node(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    node = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
                     layers.append(node)
                 else:
-                    node = [ActionNode(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    node = [ActionNode(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
                     layers.append(node)
             else:
                 raise ValueError("net type not recognized")
@@ -87,13 +86,13 @@ class ActionNode(Node):
         Node.__init__(self, *args, **kwargs)
         self.value = kwargs.pop("value") if "value" in kwargs else None
 
-    def push_to_stack(self):
+    def push_to_stack(self, stack):
         if self.activation > 0 and self.value is not None:
-            Stack.items.append(self.value)
+            stack.push(self.value)
 
-    def pull_from_stack(self):
+    def pull_from_stack(self, stack):
         if self.activation > 0 and self.value is None:
-            self.value = Stack.items.pop()
+            self.value = stack.pop()
 
 
 # NODE FACTORY HELPERS
