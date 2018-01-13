@@ -31,18 +31,28 @@ def node_factory(node_data, net_type):
         for layer_index, layer in enumerate(node_data):
             if net_type == "nodenet":
                 if layer_index < len(node_data)-1:
-                    node = [Node(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
-                    layers.append(node)
+                    nodes = [Node(node[0], *_get_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    layers.append(nodes)
                 else:
-                    node = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
-                    layers.append(node)
+                    nodes = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    layers.append(nodes)
             elif net_type == "recon":
-                if layer_index < len(node_data)-1:
-                    node = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
-                    layers.append(node)
+                if layer_index < len(node_data)-1 and layer_index != 1:
+                    nodes = [Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    layers.append(nodes)
+                # create layer 1 "equals node" as action node
+                elif layer_index == 1:
+                    nodes = []
+                    for node_index, node in enumerate(layer):
+                        if node_index != layer[len(layer)-1]:
+                            nodes.append(Node(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))))
+                        else:
+                            nodes.append(ActionNode(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))))
+                    layers.append(nodes)
+                # create all last-layer nodes as action nodes
                 else:
-                    node = [ActionNode(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
-                    layers.append(node)
+                    nodes = [ActionNode(node[0], *_get_output_slots_and_gates(*NODE_TYPES.get(node[1]))) for node in layer]
+                    layers.append(nodes)
             else:
                 raise ValueError("net type not recognized")
         return layers
