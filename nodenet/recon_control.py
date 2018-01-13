@@ -31,7 +31,7 @@ def _step_function(recon):
     stack = Stack()
     eval_node = LAST_LAYER[len(LAST_LAYER)-1]
 
-    while node.activation < 1 for node in recon.layers[0]:
+    while any(node.activation < 1 for node in recon.layers[0]):
 
         for layer in recon.layers:
 
