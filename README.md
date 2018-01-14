@@ -10,7 +10,7 @@ A function image is first parsed into images of its component digits and symbols
 
 The perceptron returns the predicted values for each function's digits and symbols in an array representing that function.  This array is used to build a ReCoN that renders the function in its structure:
 
-<img src="https://github.com/kvgallagher/nodenet/blob/master/images/ReCoN%20structure.png" alt="recon structure" raw=true height="50%" width="50%">
+<img src="https://github.com/kvgallagher/nodenet/blob/master/images/ReCoN%20structure%ex.png" alt="recon structure" raw=true height="50%" width="50%">
 
 Activation spreads through the ReCoN based on a hierarchical system of requests and confirmations.  Node pairs are connected by a pair of "sub/sur" links, denoting a parent/child relationship, or a pair of "por/ret" links, denoting a predecessor/successor relationship.
 
@@ -20,7 +20,7 @@ At any time, ReCoN nodes can have one of the following states: inactive, request
 
 The last unit in a sequence will validate a parent request by changing its state to "confirmed", or it will fail and change its state to "failed".  In this implementation, each sequence represents an operation in the function expressed by the ReCoN, and the last unit of each sequence represents either a digit or symbol operator.
 
-The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  In the example function, 0+1×2+3, if all digits and symbols have been correctly identified, program output will be 5.  
+The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  In the example function, 0+1×2-3, if all digits and symbols have been correctly identified, program output will be 5.  
 
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/images/learned_images.png?raw=true)
