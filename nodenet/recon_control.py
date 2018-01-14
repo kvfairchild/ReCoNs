@@ -9,35 +9,40 @@ def run(recon, symbol_array):
 
     _input_symbols(recon, ops)
     _activate_root_node(recon, .6)
-    _step_function(recon)
+    output = _step_function(recon)
 
+    print "Function value: ", output, "\n"
+
+# insert identified symbols into last layer nodes
 def _input_symbols(recon, ops):
     global last_layer
     last_layer = recon.layers[len(recon.layers)-1]
 
     for node_index, node in enumerate(last_layer):
+        # leave last node empty for function value
         if node_index != len(last_layer)-1:
             node.value = ops[node_index]
 
 # initialize ReCoN via root node "sub" activation
 def _activate_root_node(recon, activation):
+    global root_node
+    root_node = recon.layers[0][0]
 
-    for node in recon.layers[0]:
+    slot = root_node.get_slot("sub")
+    slot.activation = activation
 
-        slot = node.get_slot("sub")
-        slot.activation = activation
-        _net_function(recon)
+    # move activation from slot into node
+    _net_function(recon)
 
 def _step_function(recon):
     stack = Stack()
-    root_node = recon.layers[0][0]
     eval_node = last_layer[len(last_layer)-1]
 
     while 0 < root_node.activation < 1:
+
         for layer in recon.layers:
 
             request_confirmation(recon)
-
             _net_function(recon)
             _link_function(recon)
 
@@ -46,27 +51,20 @@ def _step_function(recon):
                     node.push_to_stack(stack)
                     node.pull_from_stack(stack)
 
+            print "\n"
             for node in layer:
                 print node.name, node.activation
 
-            function_value = eval_node.value
-            print function_value
-
-
-                # for node in last_layer:
-                #     print node.name, node.activation, node.value
-
-                # print "function_value: ", function_value
-
         _zero_gates(recon)
 
-        if root_node.activation >= 1 or root_node.activation<= 0:
-            print "DONE: ", root_node.activation
+        if root_node.activation >= 1:
+            print "\nCONFIRMED"
+            return eval_node.value
+        elif root_node.activation <= 0:
+            print "\nFAILED"
             return
         else:
             root_node.activation = .6
-
-        print "*********************************"
 
 # call node function for nodes that received activation
 def _net_function(recon):

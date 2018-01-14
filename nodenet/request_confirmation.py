@@ -50,6 +50,8 @@ def request_confirmation(recon):
             node.get_gate("sur").gate_function(0.0)
             return
 
+        print node.name, node.activation
+        
         node.activation = (
         node.activation if node.activation < -0.01 else  # failed -> failed
         0.2 if node.activation < 0.01 else  # (already tested that sub is positive): inactive -> preparing
@@ -73,3 +75,5 @@ def request_confirmation(recon):
         0.01 if node.activation < 1 else
         0.01 if node.get_slot("ret").activation < 0 else
         1)
+
+        print node.name, node.activation

@@ -1,3 +1,5 @@
+import numbers
+
 class Stack:
     def __init__(self):
         self.items = []
@@ -5,7 +7,7 @@ class Stack:
     def push(self, item):
     	self.items.append(item)
 
-    	if item in ("+", "-", "*", "/"):
+    	if item in ("+", "-", "*", "/") and len(self.items) >= 3:
     		self._calculate()
 
     def pop(self):
@@ -13,6 +15,10 @@ class Stack:
 
     def _calculate(self):
     	op, digit2, digit1 = self.pop(), self.pop(), self.pop()
+
+        if not any((isinstance(digit1, numbers.Number), isinstance(digit2, numbers.Number))):
+            raise ValueError("incorrect values on stack for function calculation")
+            return
     	
     	if op == "+":
     		result = digit1 + digit2
@@ -22,5 +28,9 @@ class Stack:
     		result = digit1 * digit2
     	else:
     		result = digit1 / digit2
+
+        if not isinstance(result, numbers.Number):
+            raise ValueError("incorrect values on stack for function calculation")
+            return
 
     	self.items.append(result)

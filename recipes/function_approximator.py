@@ -31,15 +31,14 @@ def function_approximator(nodenet, network_dimensions):
 	for s, subfolder in enumerate(os.listdir(symbols)):
 		function = subfolder
 		subfolder = os.path.normpath(os.path.join(symbols, subfolder))
-		if s == 3:
-			if os.path.isdir(subfolder):
-				print "\nFunction: ", function
-				symbol_array = _classify_symbols(nodenet, subfolder)
+		if os.path.isdir(subfolder):
+			print "\nFunction: ", function
+			symbol_array = _classify_symbols(nodenet, subfolder)
 
-				# build ReCoN to execute function
-				recon = Nodenet()
-				_build_recon(recon, symbol_array)
-				_run_recon(recon, symbol_array)
+			# build ReCoN to execute function
+			recon = Nodenet()
+			_build_recon(recon, symbol_array)
+			_run_recon(recon, symbol_array)
 
 def _classify_symbols(nodenet, subfolder):
 
