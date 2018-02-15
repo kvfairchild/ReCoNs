@@ -36,7 +36,7 @@ def _create_training_set(train_images, train_labels):
 		image_path = os.path.join(train_images, image)
 		image_data = img.imread(image_path)
 		normalized_image = [(255 - pixel)
-		for column in image_data for pixel in column] # add * float(1/255) for micropsi
+		for column in image_data for pixel in column] 
 		train_array.append(normalized_image)
 	
 	train_array = np.array(train_array)
@@ -55,7 +55,7 @@ def _create_testing_set(test_images, test_labels):
 		image_path = os.path.join(test_images, image)
 		image_data = img.imread(image_path)
 		normalized_image = [(255 - pixel) 
-		for column in image_data for pixel in column] # add * float(1/255) for micropsi
+		for column in image_data for pixel in column]
 		test_array.append(normalized_image)
 	
 	test_array = np.array(test_array)

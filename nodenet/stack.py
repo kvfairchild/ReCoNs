@@ -15,7 +15,6 @@ class Stack:
 
     def _calculate(self):
     	op, digit2, digit1 = self.pop(), self.pop(), self.pop()
-        print "op: ", op, "digit2: ", digit2, "digit1: ", digit1
 
         if not all((isinstance(digit1, numbers.Number), isinstance(digit2, numbers.Number))):
             raise ValueError("incorrect values on stack for function calculation")

@@ -32,13 +32,13 @@ def function_approximator(nodenet, network_dimensions):
 		function = subfolder
 		subfolder = os.path.normpath(os.path.join(symbols, subfolder))
 		if os.path.isdir(subfolder):
-			print "\nFunction: ", function
+			print "\nFunction: ", function, "\n"
 			symbol_array = _classify_symbols(nodenet, subfolder)
 
 			# build ReCoN to execute function
 			recon = Nodenet()
 			_build_recon(recon, symbol_array)
-			_run_recon(recon, symbol_array)
+			_run_recon(recon, symbol_array, function)
 
 def _classify_symbols(nodenet, subfolder):
 
@@ -71,8 +71,8 @@ def _build_recon(recon, symbol_array):
 	link_data = recon_config.generate_link_data(recon, symbol_array)
 	recon_config.link_nodes(recon, link_data)
 
-def _run_recon(recon, symbol_array):
+def _run_recon(recon, symbol_array, function):
 
-	recon_control.run(recon, symbol_array)
+	recon_control.run(recon, symbol_array, function)
 
 

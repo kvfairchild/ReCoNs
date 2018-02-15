@@ -25,18 +25,17 @@ if __name__ == "__main__":
 	network_dimensions = build_nodenet(nodenet)
 
 	""" CLASSIFIER
-	classifier(nodenet, network_dimensions, run_type, pretrain=False, save_net=False)
+	classifier(nodenet, network_dimensions, run_type, save_net=False)
 
-	An n-layer perceptron classifier for images of handwritten digits and symbols
+	An n-layer perceptron classifier for images of handwritten digits and math symbols
 
-	network_dimensions (set above in `build_nodenet()`): 
-		[784, ..., 10] will train or test on MNIST only
-		[784, ..., 14] will train or test on a combination of MNIST and algebra operators
+	network_dimensions (set above in `build_nodenet()`): [784, ..., 14]
 	run_type: "train" or "test"
-	pretrain: if True, will run a saved net with the specified dimensions on test data
+		"train" will train a new network of the specified dimensions on training data
+		"test" will run a saved pretrained net with the specified dimensions on test data
 	save_net: if True, will save a net (in config_specs) after it is finished running
 	"""
-	# classifier(nodenet, network_dimensions, "test", pretrain=True)
+	# classifier(nodenet, network_dimensions, "test")
 
 	""" FUNCTION APPROXIMATOR
 	function_approximator(nodenet, network_dimensions)
@@ -50,3 +49,5 @@ if __name__ == "__main__":
 	final output is the numeric value of the evaluated function.
 	"""
 	function_approximator(nodenet, network_dimensions)
+
+

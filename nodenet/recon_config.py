@@ -46,8 +46,7 @@ def remove_nodes(recon, node_data):
 # LINKS
 
 def generate_link_data(recon, symbol_array):
-	num_ops = (len(symbol_array)-1)/2 # number of operations in function
-
+	
 	link_list = []
 
 	for layer_index, layer in enumerate(recon.layers):
@@ -66,7 +65,7 @@ def generate_link_data(recon, symbol_array):
 
 		# create por/ret links between first layer ops nodes
 		# create por/ret links between same-layer digit nodes
-		elif layer_index == 1 or (layer_index % 2 == 0 and layer_index != 0):
+		if layer_index == 1 or (layer_index % 2 == 0 and layer_index != 0):
 			
 			por_links = [{"origin": [origin_node.name, "por"], "target": [target_node.name, "por"]} 
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
@@ -75,11 +74,11 @@ def generate_link_data(recon, symbol_array):
 			for origin_index, origin_node in enumerate(layer) for target_index, target_node in enumerate(layer)
 			if origin_index + 1 == target_index]
 
-			if layer_index == len(symbol_array)-1:
-				link_list.append([por_links, ret_links])
+			link_list.append([por_links, ret_links])
 
-			# if not last digit layer, create sub/sur links between 0-index digit node and next layer ops node
-			else:
+            # if not last digit layer, create sub/sur links between 0-index digit node and next layer ops node
+			if layer_index != 1 and layer_index != len(symbol_array)-1:
+
 				sub_links = [{"origin": [origin_node.name, "sub"], "target": [target_node.name, "sub"]} 
 				for origin_index, origin_node in enumerate(layer) 
 				for target_node in recon.layers[layer_index+1] if origin_index == 0]
@@ -87,10 +86,10 @@ def generate_link_data(recon, symbol_array):
 				for origin_index, origin_node in enumerate(layer) 
 				for target_node in recon.layers[layer_index+1] if origin_index == 0]
 
-				link_list.append([sub_links, sur_links, por_links, ret_links])
+				link_list.append([sub_links, sur_links])
 
 		# create links to last layer nodes
-		else: 
+		if layer_index == len(symbol_array): 
 			sub_links = []
 			sur_links = []
 

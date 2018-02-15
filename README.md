@@ -1,4 +1,4 @@
-# Function approximator
+# Function Approximator
 
 **Takes images of handwritten algebra functions as input and outputs the numeric value of the evaluated function.** 
 
@@ -39,9 +39,9 @@ Use the following command to build and run a function approximator:
 
 Available pretrained classifiers:
 
-* 784,240,60,14 *(~94.5% accuracy)*
-* 784,60,14 *(~93.3% accuracy)*
-* 784,14 *(~89.3% accuracy)*
+* 784,240,60,14 *(95.98% accuracy)*
+* 784,60,14 *(94.74% accuracy)*
+* 784,14 *(89.43% accuracy)*
 
 The default is set to a 3-layer classifier with 784 input nodes, 60 hidden nodes, and 14 output nodes representing digits 0-9 and algebra operators +, -, ×, ÷.
 

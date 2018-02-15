@@ -65,13 +65,16 @@ class Gate:
         self.gate_function = {
 			"default": self._default_gate_function,
 			"output": self._output_gate_function
-		}[gate_function] if gate_function is not None else self._default_gate_function
+		}[gate_function] if gate_function is not None else self._output_gate_function
 
     def _default_gate_function(self, activation):
-    	self.activation = tanh(activation)
+    	# self.activation = tanh(activation)
+        self.activation = 0 if activation < 0 else activation # ReLu
 
     def _output_gate_function(self, activation):
     	self.activation = activation
+
+    # HELPERS
 
     def is_active(self):
         return self.activation > self.parameters.get("threshold")

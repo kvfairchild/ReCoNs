@@ -55,9 +55,11 @@ def _link_function(nodenet):
 def _pretty_print(prediction, target_output, function):
 
 	if str(prediction) == str(target_output):
-		print target_output, ". ", "prediction: ", prediction, "✓"
+		mark = "✓"
 	else:
-		print target_output, ". ", "prediction: ", prediction, "⌧"
+		mark = "⌧"
+
+	print target_output, ". ", "prediction: ", prediction, mark
 
 def _send_activation_to_target_slot(link):
 	activation = link.origin_gate.activation * link.weight

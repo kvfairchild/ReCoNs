@@ -1,17 +1,19 @@
+# -*- coding: utf-8 -*- 
+
 from __future__ import division
 from itertools import chain
 
 from request_confirmation import request_confirmation
 from stack import Stack
 
-def run(recon, symbol_array):
+def run(recon, symbol_array, function):
     ops = _prep_data(symbol_array)
 
     _input_symbols(recon, ops)
     _activate_root_node(recon, .6)
     output = _step_function(recon)
 
-    print "Function value: ", output, "\n"
+    _pretty_print(output, function)
 
 # insert identified symbols into last layer nodes
 def _input_symbols(recon, ops):
@@ -51,14 +53,13 @@ def _step_function(recon):
                     node.push_to_stack(stack)
                     node.pull_from_stack(stack)
 
-            print "\n"
-            for node in layer:
-                print node.name, node.activation
+            # print "\n"
+            # for node in layer:
+            #     print node.name, node.activation
 
         _zero_gates(recon)
 
         if root_node.activation >= 1:
-            print "\nCONFIRMED"
             return eval_node.value
         elif root_node.activation <= 0:
             print "\nFAILED"
@@ -93,7 +94,7 @@ def _prep_data(symbol_array):
     for i in range(3,len(symbol_array),2):
         ops.append(symbol_array[i:i+2])
     
-    # reverse order of symbols (e.g. 1,+,2 --> 1,2,+)
+    # reverse order of symbols for stacked calculator (e.g. 1,+,2 --> 1,2,+)
     for op in ops:
         op[-2:] = reversed(op[-2:])
 
@@ -110,3 +111,14 @@ def _zero_gates(recon):
     for layer in recon.links_list:
         for link in layer:
             link.origin_gate.activation = 0
+
+def _pretty_print(output, function):
+    label = int(function[-1:])
+
+    if output == label:
+        mark = "✓"
+    else:
+        mark = "⌧"
+
+    print "\nFunction value: ", label
+    print "Output: ", output, " ", mark, "\n"
