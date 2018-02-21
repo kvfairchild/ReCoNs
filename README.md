@@ -18,14 +18,15 @@ Parent nodes request confirmation from their child nodes via "sub" links, and re
 
 At any time, ReCoN nodes can have one of the following states: inactive, requested, active, suppressed, waiting, true, confirmed, failed.
 
-The last unit in a sequence will validate a parent request by changing its state to "confirmed", or it will fail and change its state to "failed".  In this implementation, each sequence represents an operation in the function expressed by the ReCoN, and the last unit of each sequence represents either a digit or symbol operator.
+The last unit in a sequence will validate a parent request by changing its state to "confirmed", or it will fail and change its state to "failed".
 
- <img src="https://github.com/kvgallagher/nodenet/blob/master/images/ReCoN%20activation.gif" alt="recon activation" raw=true height="50%" width="50%">
+In the Function Approximator, each sequence represents an operation in the function expressed by the ReCoN, and the last unit of each sequence represents either a digit or symbol operator.
 
-*The activation spreading of a ReCoN representing 6÷3-2 can be seen in a [MicroPsi Editor Shell (MESH)](http://www.micropsi-industries.com/documentation/terminology/#mesh) visualization*
+ <img src="https://github.com/kvgallagher/nodenet/blob/master/images/ReCoN%20activation.gif" alt="recon activation" raw=true height="80%" width="80%">
+
+*The activation spreading of a ReCoN representing 6÷3-2, visualized in [MicroPsi Editor Shell (MESH)](http://www.micropsi-industries.com/documentation/terminology/#mesh). The bottom row of pink nodes provides "grounding", in the form of sub-activation, to the identified symbols represented by the last layer of blue ReCoN nodes. (Execution time is delayed for modeling purposes).*
 
 The final output of the program is the numeric value of the function, which is currently evaluated from left to right without regard for operator precedence.  In the example function, 6÷3-2, if all digits and symbols have been correctly identified, program output will be 0.  
-
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/images/learned_images.png?raw=true)
 \
