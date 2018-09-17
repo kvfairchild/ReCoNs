@@ -30,7 +30,7 @@ The final output of the program is the numeric value of the function, which is c
 
 ![Image](https://github.com/kvgallagher/nodenet/blob/master/images/learned_images.png?raw=true)
 \
-*Images of learned representations derived from the weights of a trained 2-layer [784,60,14] classifier.*
+*Images of learned representations derived from the weights of a trained 2-layer [784,14] classifier.*
 
 ## Run
 
